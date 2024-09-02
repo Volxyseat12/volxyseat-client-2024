@@ -1,5 +1,5 @@
-export class Transaction {
-    client?: string |null;
-    subscription?: string|null;
-    termInDays?: number;
+export interface ITransaction {
+    client: string;
+    subscription: string;
+    termInDays: number;
 }

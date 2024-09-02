@@ -2,30 +2,32 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
+import { ISubscription } from '../models/SubscriptionModel/Subscription';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
-
+  private _subscriptions: BehaviorSubject<ISubscription[]> = new BehaviorSubject<ISubscription[]>([]);
   apiUrl = `${environment.apiUrl}/Subscription`;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient) { }
 
+  get subscriptions$(): Observable<ISubscription[]> {
+    return this._subscriptions.asObservable();
   }
 
-  planoSelecionado: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  selectedSubscription: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-
-  setPlano(plano: any) {
-    this.planoSelecionado.next(plano);
+  set(subscription: any) {
+    this.selectedSubscription.next(subscription);
   }
 
-  getPlano(): any {
-    return this.planoSelecionado.getValue();
+  get(): any {
+    return this.selectedSubscription.getValue();
   }
 
-  getById(id:string): any{
+  getById(id: string): any {
     return this.http.get(`${this.apiUrl}/${id}`)
   }
 
@@ -33,12 +35,12 @@ export class SubscriptionService {
     return this.http.get<Subscription[]>(this.apiUrl, { headers: header });
   }
 
-  getDetalhesPlano(id: number, header: HttpHeaders): Observable<any> {
+  getDetails(id: number, header: HttpHeaders): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<any>(url, { headers: header });
   }
 
-  getSubscriptionStatus(id: string): Observable<any> {
+  getStatus(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/status/${id}`);
   }
 }

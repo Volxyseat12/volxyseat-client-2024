@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { Transaction } from '../models/SubscriptionModel/Transaction';
+import { ITransaction } from '../models/SubscriptionModel/Transaction';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class TransactionService {
 
   constructor(private http: HttpClient) { }
 
-  post(transaction: Transaction){
+  post(transaction: ITransaction){
     return this.http.post(`${this.apiUrl}`, transaction)
   }
 
