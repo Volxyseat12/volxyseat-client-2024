@@ -2,7 +2,7 @@
   <div class="header-context">
     <div class="header-right">
       <div class="header-logo">
-        <img src="/l2.png" alt="">
+        <img src="/l2.png" alt="" />
       </div>
     </div>
     <div class="header-center">
@@ -20,37 +20,33 @@
       <div class="header-login">
         <div class="header-space"></div>
         <div class="header-login-cta">
-          <ng-container *ngIf="isAuthenticated; else loginButtons">
-
+          @if(isAuthenticated){
             <span class="header-username">Olá,&ensp;{{ username }}</span>
 
             <button mat-button [matMenuTriggerFor]="menu">
-              <i class="fa-solid fa-bars i" style="color: #fb812c;"></i>
+              <i class="fa-solid fa-bars i" style="color: #fb812c"></i>
             </button>
 
             <mat-menu #menu="matMenu">
               <div class="i-cta">
                 <a href="profile">
-                  <button mat-menu-item>
-                    Perfil
-                  </button>
+                  <button mat-menu-item>Perfil</button>
                 </a>
-                <button mat-menu-item (click)="logout()">
-                  Sair
-                </button>
+                <button mat-menu-item (click)="logout()">Sair</button>
               </div>
             </mat-menu>
 
-            <div class="header-plain" *ngIf="teste">
+            @if(teste){
+            <div class="header-plain">
               <span class="plains-user">{{ teste }}</span>
             </div>
-
-
-          </ng-container>
-          <ng-template #loginButtons>
+            }
+          } @else{
             <a href="/login" class="cta-login">Entrar</a>
-            <a href="/register"><button class="cta-register">Junte-se a VOLXY</button></a>
-          </ng-template>
+            <a href="/register"
+              ><button class="cta-register">Junte-se a VOLXY</button></a
+            >
+          }
         </div>
       </div>
     </div>

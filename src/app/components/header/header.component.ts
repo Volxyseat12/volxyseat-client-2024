@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { LogOutService } from '../../services/log-out.service';
 import { SubscriptionService } from '../../services/subscription.service';
@@ -27,7 +27,7 @@ export class HeaderComponent {
     private router: Router
   ) {
     this.checkUserLogin();
-    this.getSubscriptionId();
+    // this.getSubscriptionId();
   }
 
   checkUserLogin() {
@@ -58,24 +58,24 @@ export class HeaderComponent {
     return this.tranService.getById(localStorage.getItem('transactionId'));
   }
 
-  getSubscriptionId() {
-    this.getTransaction()
-      .pipe(
-        switchMap((transaction: any) => {
-          console.log(transaction.subscription);
-          return this.getSubscriptionById(transaction.subscription);
-        })
-      )
-      .subscribe(
-        (result: any) => {
-          this.teste = result.type;
-          console.log(result);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-  }
+  // getSubscriptionId() {
+  //   this.getTransaction()
+  //     .pipe(
+  //       switchMap((transaction: any) => {
+  //         console.log(transaction.subscription);
+  //         return this.getSubscriptionById(transaction.subscription);
+  //       })
+  //     )
+  //     .subscribe(
+  //       (result: any) => {
+  //         this.teste = result.type;
+  //         console.log(result);
+  //       },
+  //       (error) => {
+  //         console.error(error);
+  //       }
+  //     );
+  // }
 
   getSubscriptionById(id: string): Observable<any> {
     return this.subService.getById(id);
