@@ -8,7 +8,7 @@ import { Register } from '../models/SubscriptionModel/Register';
 })
 export class RegisterService {
 
-  apiUrl = `${environment.apiUrl}/Authentication/register`;
+  apiUrl = `${environment.apiUrl}/new-user`;
 
   constructor(private http: HttpClient) {}
 
