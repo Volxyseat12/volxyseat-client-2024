@@ -38,7 +38,7 @@ export class LoginComponent {
   }
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login Successfully' });
+    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!' });
   }
 
   public loginRequest: any = {
