@@ -4,15 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Register } from '../models/SubscriptionModel/Register';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
-
-  apiUrl = `${environment.apiUrl}/new-user`;
+  apiUrl = `${environment.apiUrl}/User/new-user`;
 
   constructor(private http: HttpClient) {}
 
-  post(register: Register){
-    return this.http.post(`${this.apiUrl}`, register)
+  post(register: Register) {
+    return this.http.post(`${this.apiUrl}`, register);
   }
 }

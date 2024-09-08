@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable} from 'rxjs';
 import { environment } from '../environments/environment';
+import { Subscription } from '../models/SubscriptionModel/Subscription';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,8 @@ export class SubscriptionService {
     return this.http.get(`${this.apiUrl}/${id}`)
   }
 
-  getAll(header: HttpHeaders): Observable<Subscription[]> {
-    return this.http.get<Subscription[]>(this.apiUrl, { headers: header });
+  getAll(): Observable<Subscription[]> {
+    return this.http.get<Subscription[]>(this.apiUrl);
   }
 
   getDetalhesPlano(id: number, header: HttpHeaders): Observable<any> {

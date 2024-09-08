@@ -9,6 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
+import { Login } from '../../models/SubscriptionModel/Login';
 
 @Component({
   selector: 'app-login',
@@ -19,11 +20,11 @@ import { CommonModule } from '@angular/common';
     ToastModule,
     ButtonModule,
     RippleModule,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './login.component.html',
   providers: [MessageService],
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   cookiesAceitos: boolean;
@@ -38,11 +39,15 @@ export class LoginComponent {
   }
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!' });
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Login realizado com sucesso!',
+    });
   }
 
-  public loginRequest: any = {
-    email: '',
+  public loginRequest: Login = {
+    userName: '',
     password: '',
   };
 
@@ -50,11 +55,12 @@ export class LoginComponent {
     this.loginService.post(this.loginRequest).subscribe(
       (response: any) => {
         console.log('Login bem-sucedido!', response);
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('username', response.username);
+        localStorage.setItem('token', response.jwt);
+        localStorage.setItem('username', response.name);
         localStorage.setItem('transactionId', response.transaction);
         localStorage.setItem('email', response.email);
         localStorage.setItem('clientId', response.id);
+        this.showSuccess();
         this.router.navigate(['/']);
       },
       (error: any) => {

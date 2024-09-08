@@ -4,15 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Login } from '../models/SubscriptionModel/Login';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginService {
-
-  apiUrl = `${environment.apiUrl}/Authentication/login`;
+  apiUrl = `${environment.apiUrl}/User/login`;
 
   constructor(private http: HttpClient) {}
 
-  post(login: Login){
-    return this.http.post(`${this.apiUrl}`, login)
+  post(login: Login) {
+    return this.http.post(`${this.apiUrl}`, login);
   }
 }
