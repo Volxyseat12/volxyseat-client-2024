@@ -1,1 +1,62 @@
-
+<div class="flex min-h-screen w-full bg-background">
+  <div class="hidden w-64 border-r bg-background p-6 md:block">
+    <nav class="grid gap-4">
+      <button *ngFor="let feature of features"
+              class="btn"
+              [ngClass]="{'btn-primary': feature.category === activeCategory, 'btn-outline': feature.category !== activeCategory}"
+              (click)="setActiveCategory(feature.category)">
+        <svg class="w-4 h-4"><path d="M9 18 15 12l-6-6" /></svg>
+        {{ feature.category }}
+      </button>
+    </nav>
+  </div>
+  <div class="flex-1">
+    <div class="border-b bg-background px-4 py-6 md:px-6 md:py-8">
+      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-4">
+        <div *ngFor="let plan of plans"
+             class="flex flex-col items-center justify-between gap-4 rounded-lg border bg-background p-4 text-center shadow-sm">
+          <div class="grid gap-2">
+            <h3 class="text-2xl font-bold">{{ plan.name }}</h3>
+            <p class="text-4xl font-bold">{{ plan.price }}</p>
+          </div>
+          <button [ngClass]="{'btn-primary': plan.name !== 'Custom', 'btn-outline': plan.name === 'Custom'}">
+            {{ plan.buttonText }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mx-auto max-w-6xl p-4 md:p-6">
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b">
+            <th class="py-4 pr-4 font-medium">Feature</th>
+            <th *ngFor="let plan of plans" class="py-4 font-medium">{{ plan.name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feature of filteredFeatures" class="border-b hover:bg-muted/50 [&>td]:py-4">
+            <td class="pr-4 flex items-center gap-2">
+              <svg class="w-5 h-5"><path d="M8 21s-4-3-4-9 4-9 4-9" /></svg>
+              {{ feature.name }}
+            </td>
+            <td *ngFor="let plan of plans" class="text-center">
+              <svg *ngIf="feature[plan.name.toLowerCase()]"
+                   class="mx-auto h-5 w-5 text-green-500"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                   stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+              <svg *ngIf="!feature[plan.name.toLowerCase()]"
+                   class="mx-auto h-5 w-5 text-red-500"
+                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                   stroke-linejoin="round">
+                <path d="M18 6 6 18"/>
+                <path d="m6 6 12 12"/>
+              </svg>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
