@@ -1,72 +1,74 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importando o CommonModule
-import { Subscription } from '../../models/SubscriptionModel/Subscription';
+import { Component, OnInit } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 import { SubscriptionService } from '../../services/subscription.service';
-import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
+import { ISubscription } from '../../models/SubscriptionModel/Subscription';
 
 @Component({
   selector: 'app-subscription',
-  standalone: true,
-  imports: [CommonModule], // Incluindo o CommonModule aqui
   templateUrl: './subscription.component.html',
   styleUrls: ['./subscription.component.css'],
+  standalone: true,
+  imports: [CommonModule],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('300ms', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+      transition(':leave', [
+        animate('300ms', style({ opacity: 0, transform: 'translateY(-20px)' }))
+      ])
+    ])
+  ],
 })
-export class SubscriptionComponent {
-  subscriptions: Subscription[] = [];
-  subscriptionEnum = SubscriptionEnum;
+export class SubscriptionComponent implements OnInit {
+  private _subscription: Subject<null> = new Subject<null>();
+  subscriptions: ISubscription[] = [];
 
-  plans = [
-    { name: 'Basic', price: '$9/mo', buttonText: 'Try for free' },
-    { name: 'Medium', price: '$29/mo', buttonText: 'Try for free' },
-    { name: 'Advanced', price: '$59/mo', buttonText: 'Learn more' },
-    { name: 'Custom', price: 'Contact us', buttonText: 'Learn more' }
+  constructor(private _service: SubscriptionService) { }
+
+  ngOnInit(): void {
+    this._service.getSubscriptions().pipe(takeUntil(this._subscription)).subscribe((response) => {
+      this.subscriptions = response;
+      console.log(this.subscriptions);
+    });
+  }
+  
+
+  tiers = [
+    { name: "BASIC", price: "R$ 59/mês", buttonText: "Contratar", buttonVariant: "default" },
+    { name: "MEDIUM", price: "R$ 139/mês", buttonText: "Contratar", buttonVariant: "default" },
+    { name: "ADVANCED", price: "R$ 389/mês", buttonText: "Contratar", buttonVariant: "default" },
+    { name: "CUSTOM", price: "R$ 549/mês", buttonText: "Contratar", buttonVariant: "default" },
   ];
 
-  features = [
-    {
-      category: 'Support',
-      items: [
-        { name: '24/7 Email Support', basic: true, medium: true, advanced: true, custom: true },
-        { name: 'Live Chat', basic: false, medium: true, advanced: true, custom: true },
-        { name: 'Phone Support', basic: false, medium: false, advanced: true, custom: true }
-      ] as Array<{ name: string; [key: string]: boolean | string }>
-    },
+  categories = [
+    { name: "Suporte" },
+    { name: "Recursos gerais" },
+    { name: "Marketing" },
+    { name: "Logística" },
+    { name: "Gestão da loja" },
+    { name: "Personalização" },
+    { name: "Formas de pagamento" },
+    { name: "Integrações" },
   ];
 
-
-  activeCategory = 'Support';
-  filteredFeatures = this.features.find(feature => feature.category === this.activeCategory)?.items || [];
-
-  setActiveCategory(category: string) {
-    this.activeCategory = category;
-    this.filteredFeatures = this.features.find(feature => feature.category === category)?.items || [];
-  }
-
-  subscriptionTypes = Object.keys(SubscriptionEnum).filter((key) =>
-    this.isSubscriptionEnumKey(key)
-  );
-
-  isSubscriptionEnumKey(key: string): key is keyof typeof SubscriptionEnum {
-    return key in SubscriptionEnum;
-  }
-
-  constructor(private subscriptionService: SubscriptionService) {
-    this.getAll();
-    for (let teste of this.subscriptionTypes) {
-      console.log(this.subscriptionTypeLabels[this.subscriptionEnum[<SubscriptionEnum>teste]])
-    }
-  }
-
-  subscriptionTypeLabels = {
-    [SubscriptionEnum.Basic]: 'Básico',
-    [SubscriptionEnum.Medium]: 'Médio',
-    [SubscriptionEnum.Premium]: 'Avançado',
+  features: any = {
+    "Suporte": [
+      { name: "Central de autoatendimento", tiers: [true, true, true, true] },
+      { name: "Messenger", tiers: [true, true, true, true] },
+      { name: "Email", tiers: [true, true, true, true] },
+      { name: "Whatsapp", tiers: [false, true, true, true] },
+      { name: "Telefone", tiers: [false, false, true, true] },
+      { name: "Telefone com atendimento prioritário", tiers: [false, false, false, true] },
+    ],
   };
 
-  getAll() {
-    this.subscriptionService.getAll().subscribe((data) => {
-      this.subscriptions = data;
-      console.log(data);
-    });
+  selectedCategory: string = 'Suporte';
+
+  setSelectedCategory(category: string) {
+    this.selectedCategory = category;
   }
 }

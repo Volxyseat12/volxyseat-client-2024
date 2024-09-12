@@ -2,7 +2,7 @@ import { SubscriptionEnum } from '../Enums/SubscriptionEnum';
 import { SubscriptionStatus } from '../Enums/SubscriptionStatus';
 import { SubscriptionProperties } from '../SubscriptionProperties';
 
-export interface Subscription {
+export interface ISubscription {
   id: string;
   type: SubscriptionEnum;
   status: SubscriptionStatus;
