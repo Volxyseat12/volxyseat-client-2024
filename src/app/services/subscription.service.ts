@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { ISubscription } from '../models/SubscriptionModel/Subscription';
 import { VolxyseatEndpoints } from '../volxyseat.endpoints';
+import { SubscriptionEnum } from '../models/Enums/SubscriptionEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +21,22 @@ export class SubscriptionService {
   get subscriptions$(): Observable<ISubscription[]> {
     return this._subscription.asObservable();
   }
-  
+
+  getSubscriptionTypeText(type: SubscriptionEnum): string {
+    const typeMap: { [key: number]: string } = {
+      [SubscriptionEnum.Basic]: 'Basic',
+      [SubscriptionEnum.Medium]: 'Medium',
+      [SubscriptionEnum.Advanced]: 'Advanced',
+      [SubscriptionEnum.Personalized]: 'Personalized'
+    };
+    return typeMap[type] || 'Unknown';
+  }
+
   getSubscriptions(): Observable<ISubscription[]> {
-    const apiUrl = environment.apiUrl; 
+    const apiUrl = environment.apiUrl;
     const endpointUrl = VolxyseatEndpoints.endpoints.getSubscriptions(apiUrl);
     return this.http.get<ISubscription[]>(endpointUrl);
   }
-  
 
   setPlano(plano: any) {
     this.planoSelecionado.next(plano);

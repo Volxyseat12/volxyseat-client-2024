@@ -20,3 +20,7 @@ export interface SubscriptionProperties {
   sla: boolean;
   serviceLevel: boolean;
 }
+
+export interface PropertyCategoryMapping {
+  [key: string]: { name: string; key: keyof SubscriptionProperties }[];
+}

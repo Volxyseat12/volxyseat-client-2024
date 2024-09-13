@@ -1,5 +1,6 @@
 export enum SubscriptionEnum {
-  Basic = 'Basic',
-  Medium = 'Medium',
-  Premium = 'Premium'
+  Basic = 0,
+  Medium = 1,
+  Advanced = 2,
+  Personalized = 3
 }
