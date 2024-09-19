@@ -7,7 +7,7 @@ import { Login } from '../models/SubscriptionModel/Login';
   providedIn: 'root',
 })
 export class LoginService {
-  apiUrl = `${environment.apiUrl}/User/login`;
+  apiUrl = 'https://localhost:7088/api/v1/User/login';
 
   constructor(private http: HttpClient) {}
 

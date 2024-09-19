@@ -19,34 +19,38 @@
     </div>
     <div class="header-left">
       <div class="header-login">
-        <div class="header-space"></div>
         <div class="header-login-cta">
           @if(isAuthenticated){
-            <span class="header-username">Olá,&ensp;{{ username }}</span>
+          <div class="p-2 rounded-full bg-orange-500 uppercase font-bold text-white">
+            <h1>Personalized</h1>
+          </div>
+          <div class="header-space"></div>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <button (click)="toggleDropdown()"
+                class="flex items-center rounded-lg px-4 py-2 border border-gray-300 hover:bg-gray-100 transition">
+                <span class="mr-2 text-gray-700">Olá, {{ username }}</span>
+                <i class="pi pi-chevron-down text-gray-600"></i>
+              </button>
 
-            <button mat-button [matMenuTriggerFor]="menu">
-              <i class="fa-solid fa-bars i" style="color: #fb812c"></i>
-            </button>
-
-            <mat-menu #menu="matMenu">
-              <div class="i-cta">
-                <a href="profile">
-                  <button mat-menu-item>Perfil</button>
-                </a>
-                <button mat-menu-item (click)="logout()">Sair</button>
+              <div *ngIf="showDropdown"
+                class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Settings</a>
+                <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()">Log
+                  out</a>
               </div>
-            </mat-menu>
-
-            @if(teste){
-            <div class="header-plain">
-              <span class="plains-user">{{ teste }}</span>
             </div>
-            }
+          </div>
+
+          @if(teste){
+          <div class="header-plain">
+            <span class="plains-user">{{ teste }}</span>
+          </div>
+          }
           } @else{
-            <a href="/login" class="cta-login">Entrar</a>
-            <a href="/register"
-              ><button class="cta-register">Junte-se a VOLXY</button></a
-            >
+          <a href="/login" class="cta-login">Entrar</a>
+          <a href="/register"><button class="cta-register">Junte-se a VOLXY</button></a>
           }
         </div>
       </div>

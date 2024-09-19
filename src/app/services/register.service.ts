@@ -7,11 +7,11 @@ import { Register } from '../models/SubscriptionModel/Register';
   providedIn: 'root',
 })
 export class RegisterService {
-  apiUrl = `${environment.apiUrl}/User/new-user`;
+  apiUrl = 'https://localhost:7088/api/v1/User/new-user';
 
   constructor(private http: HttpClient) {}
 
   post(register: Register) {
-    return this.http.post(`${this.apiUrl}`, register);
+    return this.http.post(this.apiUrl, register);
   }
 }

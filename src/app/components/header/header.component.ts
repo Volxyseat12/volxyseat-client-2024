@@ -5,11 +5,12 @@ import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { MatMenuModule } from '@angular/material/menu';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatMenuModule],
+  imports: [MatMenuModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -19,6 +20,7 @@ export class HeaderComponent {
   isMenuOpen = false;
   isWideScreen = window.innerWidth > 930;
   teste: string = '';
+  showDropdown: boolean = false;
 
   constructor(
     private logOutService: LogOutService,
@@ -27,7 +29,6 @@ export class HeaderComponent {
     private router: Router
   ) {
     this.checkUserLogin();
-    // this.getSubscriptionId();
   }
 
   checkUserLogin() {
@@ -38,6 +39,10 @@ export class HeaderComponent {
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
   }
 
   logout() {

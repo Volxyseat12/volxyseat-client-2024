@@ -10,11 +10,13 @@
         <i class="pi pi-home text-gray-700"></i>
         <span>Dashboard</span>
       </a>
-      <a href="/profile" class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition">
+      <a href="/profile"
+        class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition">
         <i class="pi pi-user"></i>
         <span>Profile</span>
       </a>
-      <a href="/profile-subscriptions" class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition">
+      <a href="/profile-subscriptions"
+        class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition">
         <i class="pi pi-dollar text-gray-700"></i>
         <span>Subscriptions</span>
       </a>
@@ -37,7 +39,7 @@
           <div class="relative">
             <button (click)="toggleDropdown()"
               class="flex items-center rounded-lg px-4 py-2 border border-gray-300 hover:bg-gray-100 transition">
-              <span class="mr-2 text-gray-700">John Doe</span>
+              <span class="mr-2 text-gray-700">Olá, {{ username }}</span>
               <i class="pi pi-chevron-down text-gray-600"></i>
             </button>
 
@@ -45,7 +47,8 @@
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
               <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
               <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Settings</a>
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Log out</a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()">Log
+                out</a>
             </div>
           </div>
         </div>
@@ -64,7 +67,8 @@
               <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="email" type="email"
                 value="john.doe@example.com" />
             </div>
-            <button class="px-4 py-2 uppercase font-bold text-white bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md transition">
+            <button
+              class="px-4 py-2 uppercase font-bold text-white bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md transition">
               Edit Profile
             </button>
           </form>
