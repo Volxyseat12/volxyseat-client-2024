@@ -1,3 +1,4 @@
+import { TransactionService } from './../../services/transaction.service';
 import { ButtonModule } from 'primeng/button';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -28,11 +29,12 @@ import { Login } from '../../models/SubscriptionModel/Login';
 })
 export class LoginComponent {
   cookiesAceitos: boolean;
-
+  transactionId: string = '';
   constructor(
     private router: Router,
     private cookieService: CookieService,
     private loginService: LoginService,
+    private transactionService: TransactionService,
     private messageService: MessageService
   ) {
     this.cookiesAceitos = this.cookieService.get('aceitou_cookies') === 'true';
@@ -51,21 +53,33 @@ export class LoginComponent {
     password: '',
   };
 
+  getByUserId(id: string) {
+    this.transactionService.getById(id).subscribe({
+      next: (reponse: any) => {
+        this.transactionId = reponse.id;
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
+  }
+
   login() {
-    this.loginService.post(this.loginRequest).subscribe(
-      (response: any) => {
+    this.loginService.post(this.loginRequest).subscribe({
+      next: (response: any) => {
+        this.getByUserId(response.clientId);
         console.log('Login bem-sucedido!', response);
         localStorage.setItem('token', response.jwt);
-        localStorage.setItem('username', response.name);
-        localStorage.setItem('transactionId', response.transaction);
         localStorage.setItem('email', response.email);
-        localStorage.setItem('clientId', response.id);
+        localStorage.setItem('username', response.name);
+        localStorage.setItem('clientId', response.clientId);
+        localStorage.setItem('transactionId', this.transactionId);
         this.showSuccess();
         this.router.navigate(['/']);
       },
-      (error: any) => {
+      error: (error: any) => {
         console.log('Erro ao fazer login!', error);
-      }
-    );
+      },
+    });
   }
 }
