@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { Register } from '../../models/SubscriptionModel/Register';
 import { RegisterService } from '../../services/register.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',

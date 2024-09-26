@@ -1,16 +1,26 @@
-import { TransactionService } from './../../services/transaction.service';
 import { ButtonModule } from 'primeng/button';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
-import { LoginService } from '../../services/login.service';
-import { CookiepopupComponent } from '../../components/cookiepopup/cookiepopup.component';
-import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import { TransactionService } from './../../services/transaction.service';
+import { Component } from '@angular/core';
+
+import { LoginService } from '../../services/login.service';
+
 import { MessageService } from 'primeng/api';
+import { Login } from '../../models/SubscriptionModel/Login';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CookiepopupComponent } from '../../components/cookiepopup/cookiepopup.component';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
-import { Login } from '../../models/SubscriptionModel/Login';
+import { CookieService } from 'ngx-cookie-service';
+
+
+// CookiepopupComponent,
+//   FormsModule,
+//   ToastModule,
+//   ButtonModule,
+//   RippleModule,
+//   CommonModule;
 
 @Component({
   selector: 'app-login',
@@ -21,7 +31,7 @@ import { Login } from '../../models/SubscriptionModel/Login';
     ToastModule,
     ButtonModule,
     RippleModule,
-    CommonModule,
+    CommonModule
   ],
   templateUrl: './login.component.html',
   providers: [MessageService],
@@ -29,7 +39,7 @@ import { Login } from '../../models/SubscriptionModel/Login';
 })
 export class LoginComponent {
   cookiesAceitos: boolean;
-  transactionId: string = '';
+  transactionId!: string;
   constructor(
     private router: Router,
     private cookieService: CookieService,
@@ -53,29 +63,24 @@ export class LoginComponent {
     password: '',
   };
 
-  getByUserId(id: string) {
-    this.transactionService.getById(id).subscribe({
-      next: (reponse: any) => {
-        this.transactionId = reponse.id;
-      },
-      error: (error: any) => {
-        console.log(error);
-      },
-    });
-  }
-
   login() {
     this.loginService.post(this.loginRequest).subscribe({
       next: (response: any) => {
-        this.getByUserId(response.clientId);
-        console.log('Login bem-sucedido!', response);
-        localStorage.setItem('token', response.jwt);
-        localStorage.setItem('email', response.email);
-        localStorage.setItem('username', response.name);
-        localStorage.setItem('clientId', response.clientId);
-        localStorage.setItem('transactionId', this.transactionId);
-        this.showSuccess();
-        this.router.navigate(['/']);
+        this.transactionService.getById(response.clientId).subscribe({
+          next: (transactionResponse: any) => {
+            this.transactionId = transactionResponse.id;
+            localStorage.setItem('token', response.jwt);
+            localStorage.setItem('email', response.email);
+            localStorage.setItem('username', response.name);
+            localStorage.setItem('clientId', response.clientId);
+            localStorage.setItem('transactionId', this.transactionId);
+            this.showSuccess();
+            this.router.navigate(['/']);
+          },
+          error: (error: any) => {
+            console.log('Erro ao obter transação!', error);
+          },
+        });
       },
       error: (error: any) => {
         console.log('Erro ao fazer login!', error);

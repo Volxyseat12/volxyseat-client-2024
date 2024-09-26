@@ -6,13 +6,14 @@ import { CookieService } from 'ngx-cookie-service';
   standalone: true,
   imports: [],
   templateUrl: './cookiepopup.component.html',
-  styleUrl: './cookiepopup.component.css'
+  styleUrl: './cookiepopup.component.css',
 })
 export class CookiepopupComponent {
   cookiesAceitos: boolean;
 
   constructor(private cookieService: CookieService) {
-    this.cookiesAceitos = this.cookieService.get('aceitou_cookies_dev') === 'true';
+    this.cookiesAceitos =
+      this.cookieService.get('aceitou_cookies_dev') === 'true';
   }
 
   aceitarCookies() {
