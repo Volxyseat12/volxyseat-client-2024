@@ -2,10 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SubscriptionService } from '../../services/subscription.service';
-import { ISubscription } from '../../models/SubscriptionModel/Subscription';
+
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { PropertyCategoryMapping } from '../../models/SubscriptionProperties';
+import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
+import { PropertyCategoryMapping } from '../../models/ISubscriptionProperties';
+import { routes } from '../../app.routes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-subscription',
@@ -17,13 +20,11 @@ import { PropertyCategoryMapping } from '../../models/SubscriptionProperties';
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 }))
+        animate('300ms', style({ opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('300ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+      transition(':leave', [animate('300ms', style({ opacity: 0 }))]),
+    ]),
+  ],
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
   private _subscription: Subject<void> = new Subject<void>();
@@ -33,61 +34,69 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   isTransitioning: boolean = false;
 
   categories = [
-    { name: "Suporte" },
-    { name: "Documentação" },
-    { name: "Funcionalidades" },
-    { name: "Suporte Prioritário" },
+    { name: 'Suporte' },
+    { name: 'Documentação' },
+    { name: 'Funcionalidades' },
+    { name: 'Suporte Prioritário' },
   ];
 
   propertyCategoryMapping: PropertyCategoryMapping = {
-    "Suporte": [
-      { name: "Central de autoatendimento", key: "support" },
-      { name: "Telefone", key: "phone" },
-      { name: "Email", key: "email" },
-      { name: "Messenger", key: "messenger" },
-      { name: "Chat", key: "chat" },
-      { name: "Suporte ao vivo", key: "liveSupport" },
+    Suporte: [
+      { name: 'Central de autoatendimento', key: 'support' },
+      { name: 'Telefone', key: 'phone' },
+      { name: 'Email', key: 'email' },
+      { name: 'Messenger', key: 'messenger' },
+      { name: 'Chat', key: 'chat' },
+      { name: 'Suporte ao vivo', key: 'liveSupport' },
     ],
-    "Documentação": [
-      { name: "Documentação", key: "documentation" },
-      { name: "Onboarding", key: "onboarding" },
-      { name: "Treinamento", key: "training" },
+    Documentação: [
+      { name: 'Documentação', key: 'documentation' },
+      { name: 'Onboarding', key: 'onboarding' },
+      { name: 'Treinamento', key: 'training' },
     ],
-    "Funcionalidades": [
-      { name: "Atualizações", key: "updates" },
-      { name: "Backup", key: "backup" },
-      { name: "Personalização", key: "customization" },
-      { name: "Análises", key: "analytics" },
-      { name: "Integração", key: "integration" },
-      { name: "Acesso à API", key: "apiAccess" },
-      { name: "Armazenamento em nuvem", key: "cloudStorage" },
-      { name: "Multiusuário", key: "multiUser" },
+    Funcionalidades: [
+      { name: 'Atualizações', key: 'updates' },
+      { name: 'Backup', key: 'backup' },
+      { name: 'Personalização', key: 'customization' },
+      { name: 'Análises', key: 'analytics' },
+      { name: 'Integração', key: 'integration' },
+      { name: 'Acesso à API', key: 'apiAccess' },
+      { name: 'Armazenamento em nuvem', key: 'cloudStorage' },
+      { name: 'Multiusuário', key: 'multiUser' },
     ],
-    "Suporte Prioritário": [
-      { name: "Suporte prioritário", key: "prioritySupport" },
-      { name: "SLA", key: "sla" },
-      { name: "Nível de serviço", key: "serviceLevel" },
+    'Suporte Prioritário': [
+      { name: 'Suporte prioritário', key: 'prioritySupport' },
+      { name: 'SLA', key: 'sla' },
+      { name: 'Nível de serviço', key: 'serviceLevel' },
     ],
   };
 
   subscriptionEnumToString(enumValue: number): string {
     switch (enumValue) {
-      case 0: return 'Basic';
-      case 1: return 'Medium';
-      case 2: return 'Advanced';
-      case 3: return 'Personalized';
-      default: return 'Unknown';
+      case 0:
+        return 'Basic';
+      case 1:
+        return 'Medium';
+      case 2:
+        return 'Advanced';
+      case 3:
+        return 'Personalized';
+      default:
+        return 'Unknown';
     }
   }
 
-  constructor(private _service: SubscriptionService) { }
+  constructor(private _service: SubscriptionService, private router: Router) {}
 
   ngOnInit(): void {
-    this._service.getSubscriptions().pipe(takeUntil(this._subscription)).subscribe((response: ISubscription[]) => {
-      this.subscriptions = response;
-      console.log(this.subscriptions);
-      this.setSubscriptionProperties(this.subscriptions[0]);
-    });
+    this._service
+      .getSubscriptions()
+      .pipe(takeUntil(this._subscription))
+      .subscribe((response: ISubscription[]) => {
+        this.subscriptions = response;
+        console.log(this.subscriptions);
+        this.setSubscriptionProperties(this.subscriptions[0]);
+      });
   }
 
   setSelectedCategory(category: string): void {
@@ -96,6 +105,11 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       this.selectedCategory = category;
       this.isTransitioning = false;
     }, 300);
+  }
+
+  selectSubscription(subscriptionId: string) {
+    localStorage.setItem('subId', subscriptionId);
+    this.router.navigate(['/payment']);
   }
 
   setSubscriptionProperties(subscription: ISubscription): void {

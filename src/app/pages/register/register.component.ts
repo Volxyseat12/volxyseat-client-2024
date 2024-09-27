@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { LoginService } from '../../services/login.service';
-import { Register } from '../../models/SubscriptionModel/Register';
 import { RegisterService } from '../../services/register.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IRegister } from '../../models/SubscriptionModel/IRegister';
 
 @Component({
   selector: 'app-register',
@@ -21,13 +21,13 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
-  public newRegister: Register = new Register();
+  public newRegister: IRegister = new IRegister();
 
   registerAndLogin() {
     console.log(this.newRegister);
     this.registerService.post(this.newRegister).subscribe((response: any) => {
       console.log('Temos uma nova empresa registrada!', response);
-      this.newRegister = new Register();
+      this.newRegister = new IRegister();
       this.router.navigate(['/login']);
     });
   }

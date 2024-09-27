@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Login } from '../models/SubscriptionModel/Login';
+import { ILogin } from '../models/SubscriptionModel/ILogin';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  post(login: Login) {
+  post(login: ILogin) {
     return this.http.post(`${this.apiUrl}`, login);
   }
 }

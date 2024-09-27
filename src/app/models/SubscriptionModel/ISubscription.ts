@@ -1,6 +1,7 @@
 import { SubscriptionEnum } from '../Enums/SubscriptionEnum';
 import { SubscriptionStatus } from '../Enums/SubscriptionStatus';
-import { SubscriptionProperties } from '../SubscriptionProperties';
+import { ISubscriptionProperties } from '../ISubscriptionProperties';
+
 
 export interface ISubscription {
   id: string;
@@ -10,5 +11,5 @@ export interface ISubscription {
   price: number;
   createdOn: Date;
   updatedOn: Date;
-  subscriptionProperties: SubscriptionProperties;
+  subscriptionProperties: ISubscriptionProperties;
 }

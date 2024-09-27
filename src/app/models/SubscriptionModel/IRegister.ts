@@ -1,4 +1,4 @@
-export class Register {
+export class IRegister {
   name!: string;
   email!: string;
   password!: string;

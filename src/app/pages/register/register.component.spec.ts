@@ -5,7 +5,7 @@ import { RegisterService } from '../../services/register.service';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { Register } from '../../models/SubscriptionModel/Register';
+import { IRegister } from '../../models/SubscriptionModel/IRegister';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -57,6 +57,6 @@ describe('RegisterComponent', () => {
         })
       );
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
-    expect(component.newRegister).toEqual(new Register());
+    expect(component.newRegister).toEqual(new IRegister());
   });
 });

@@ -20,8 +20,8 @@
             {{ subscriptionEnumToString(subscription.type) }}
           </div>
           <div class="font-bold text-xl mb-2">{{ subscription.price | currency }}</div>
-          <button class="w-full text-orange-500 hover:bg-orange-100 transition-colors duration-300">
-            Contratar plano
+          <button (click)="selectSubscription(subscription.id)" class="w-full text-orange-500 hover:bg-orange-100 transition-colors duration-300">
+              Contratar plano
           </button>
         </div>
       </div>

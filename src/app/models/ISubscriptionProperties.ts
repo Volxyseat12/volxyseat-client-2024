@@ -1,4 +1,4 @@
-export interface SubscriptionProperties {
+export interface ISubscriptionProperties {
   support: boolean;
   phone: boolean;
   email: boolean;
@@ -22,5 +22,5 @@ export interface SubscriptionProperties {
 }
 
 export interface PropertyCategoryMapping {
-  [key: string]: { name: string; key: keyof SubscriptionProperties }[];
+  [key: string]: { name: string; key: keyof ISubscriptionProperties }[];
 }

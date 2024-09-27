@@ -6,21 +6,15 @@ import { Component } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 
 import { MessageService } from 'primeng/api';
-import { Login } from '../../models/SubscriptionModel/Login';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CookiepopupComponent } from '../../components/cookiepopup/cookiepopup.component';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
+import { ILogin } from '../../models/SubscriptionModel/ILogin';
 
 
-// CookiepopupComponent,
-//   FormsModule,
-//   ToastModule,
-//   ButtonModule,
-//   RippleModule,
-//   CommonModule;
 
 @Component({
   selector: 'app-login',
@@ -31,7 +25,7 @@ import { CookieService } from 'ngx-cookie-service';
     ToastModule,
     ButtonModule,
     RippleModule,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './login.component.html',
   providers: [MessageService],
@@ -58,7 +52,7 @@ export class LoginComponent {
     });
   }
 
-  public loginRequest: Login = {
+  public loginRequest: ILogin = {
     userName: '',
     password: '',
   };
@@ -69,18 +63,18 @@ export class LoginComponent {
         this.transactionService.getById(response.clientId).subscribe({
           next: (transactionResponse: any) => {
             this.transactionId = transactionResponse.id;
-            localStorage.setItem('token', response.jwt);
-            localStorage.setItem('email', response.email);
-            localStorage.setItem('username', response.name);
-            localStorage.setItem('clientId', response.clientId);
-            localStorage.setItem('transactionId', this.transactionId);
-            this.showSuccess();
-            this.router.navigate(['/']);
           },
           error: (error: any) => {
             console.log('Erro ao obter transação!', error);
           },
         });
+        localStorage.setItem('token', response.jwt);
+        localStorage.setItem('email', response.email);
+        localStorage.setItem('username', response.name);
+        localStorage.setItem('clientId', response.clientId);
+        localStorage.setItem('transactionId', this.transactionId);
+        this.showSuccess();
+        this.router.navigate(['/']);
       },
       error: (error: any) => {
         console.log('Erro ao fazer login!', error);
