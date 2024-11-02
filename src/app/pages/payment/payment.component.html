@@ -1,79 +1,40 @@
 <div class="min-h-screen flex items-center justify-center bg-white">
   <main class="container mx-auto px-4">
     <div class="flex flex-col lg:flex-row gap-8 justify-center items-center">
-      <!-- Coluna Esquerda com Informações da Fatura -->
-      <div class="flex-grow max-w-lg">
-        <!-- Seção de Fatura -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
-          <div class="flex justify-between items-center">
-            <div class="text-center">
-              <h2 class="text-3xl font-bold">#{{ invoice.number }}</h2>
-              <p class="text-2xl font-semibold text-[#FB812C]">${{ invoice.amount }}</p>
+      <!-- Formulário de Pagamento com Mercado Pago -->
+      <div class="bg-white rounded-lg shadow-md p-6 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+        <h3 class="text-lg font-semibold mb-4">Payment Information</h3>
+        <form id="form-checkout" (submit)="processPayment($event)">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Cardholder Name</label>
+              <input type="text" id="cardholderName" class="w-full border-gray-300 rounded p-2" placeholder="John Doe" required>
             </div>
-            <div class="text-right">
-              <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{{ invoice.status }}</span>
-              <p class="text-sm text-gray-500">{{ invoice.dueDate }}</p>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Card Number</label>
+              <input type="text" id="cardNumber" class="w-full border-gray-300 rounded p-2" placeholder="1234 5678 9012 3456" required>
             </div>
-          </div>
-          <div class="flex space-x-4 mt-4 justify-center">
-            <button class="bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 px-4 transition-transform transform hover:scale-105 flex items-center justify-center">
-              <mat-icon class="mr-2">send</mat-icon> Send Invoice
-            </button>
-            <button class="border border-[#FB812C] text-[#FB812C] hover:bg-[#FB812C] hover:text-white rounded py-2 px-4 transition-colors duration-200 flex items-center justify-center">
-              <mat-icon class="mr-2">edit</mat-icon> Edit Invoice
-            </button>
-            <button class="border border-[#FB812C] text-[#FB812C] hover:bg-[#FB812C] hover:text-white rounded py-2 px-4 transition-colors duration-200 flex items-center justify-center">
-              <mat-icon class="mr-2">add</mat-icon> Add Note
-            </button>
-          </div>
-        </div>
-
-        <!-- Seção de Histórico -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
-          <h3 class="text-lg font-semibold">History</h3>
-          <ul class="space-y-4 mt-4">
-            <li *ngFor="let action of ['Invoice created', 'Invoice sent', 'Invoice finalized']" class="flex items-center space-x-3 justify-center">
-              <div class="bg-[#FB812C] p-2 rounded-full">
-                <mat-icon class="text-white">description</mat-icon>
+            <div class="flex space-x-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                <input type="text" id="cardExpirationDate" class="w-full border-gray-300 rounded p-2" placeholder="MM/YY" required>
               </div>
-              <div class="text-center">
-                <p class="font-medium">{{ action }}</p>
-                <p class="text-sm text-gray-500">July 15, 2023 at 2:30 PM</p>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">CVV</label>
+                <input type="text" id="securityCode" class="w-full border-gray-300 rounded p-2" placeholder="123" required>
               </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Lista de Itens -->
-        <div class="bg-white rounded-lg shadow-md p-6 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
-          <div class="flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-center">Items</h3>
-            <button class="border border-gray-300 text-gray-700 rounded px-2 py-1 hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center">
-              Customize columns <mat-icon class="ml-2">arrow_drop_down</mat-icon>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="email" class="w-full border-gray-300 rounded p-2" placeholder="email@example.com" required>
+            </div>
+            <button type="submit" class="w-full mt-4 bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 transition-transform transform hover:scale-105 flex items-center justify-center">
+              <mat-icon class="mr-2">credit_card</mat-icon> Pay Now
             </button>
           </div>
-          <table class="min-w-full mt-4 text-center">
-            <thead class="bg-gray-100">
-              <tr>
-                <th class="py-2 px-4 font-medium">Description</th>
-                <th class="py-2 px-4 font-medium">QTY</th>
-                <th class="py-2 px-4 font-medium">Price</th>
-                <th class="py-2 px-4 font-medium text-right">Total Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of items" class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                <td class="py-2 px-4">{{ item.description }}</td>
-                <td class="py-2 px-4">{{ item.qty }}</td>
-                <td class="py-2 px-4">${{ item.price }}</td>
-                <td class="py-2 px-4 text-right">${{ item.totalAmount }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        </form>
       </div>
 
-      <!-- Coluna Direita com Informações do Cliente e Ajuda -->
       <div class="w-full lg:w-1/3 max-w-lg">
         <!-- Informações do Cliente -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
@@ -89,7 +50,7 @@
         </div>
 
         <!-- Seção de Ajuda -->
-        <div class="bg-white rounded-lg shadow-md p-6 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+        <div class="bg-white rounded-lg shadow-md p-6 mt-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
           <h3 class="text-lg font-semibold">Need Help?</h3>
           <p class="text-sm text-gray-500 mt-4">If you have any questions or issues, feel free to ask us.</p>
           <button class="w-full mt-4 bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 transition-transform transform hover:scale-105 flex items-center justify-center">

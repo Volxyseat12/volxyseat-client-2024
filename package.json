@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "lucide-angular": "^0.441.0",
+    "mercadopago": "^2.0.15",
     "ngx-cookie-service": "^18.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.9",
