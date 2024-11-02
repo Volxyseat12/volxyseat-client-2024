@@ -7,14 +7,16 @@ import { SubscriptionEnum } from '../models/Enums/SubscriptionEnum';
 import { ISubscription } from '../models/SubscriptionModel/ISubscription';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SubscriptionService {
-  private _subscription: BehaviorSubject<ISubscription[]> = new BehaviorSubject<ISubscription[]>([]);
+  private _subscription: BehaviorSubject<ISubscription[]> = new BehaviorSubject<
+    ISubscription[]
+  >([]);
 
   apiUrl = `${environment.apiUrl}/Subscription`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   planoSelecionado: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
@@ -27,7 +29,7 @@ export class SubscriptionService {
       [SubscriptionEnum.Basic]: 'Basic',
       [SubscriptionEnum.Medium]: 'Medium',
       [SubscriptionEnum.Advanced]: 'Advanced',
-      [SubscriptionEnum.Personalized]: 'Personalized'
+      [SubscriptionEnum.Personalized]: 'Personalized',
     };
     return typeMap[type] || 'Unknown';
   }
@@ -47,14 +49,19 @@ export class SubscriptionService {
   }
 
   getById(id: string): any {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    const apiUrl = environment.apiUrl;
+    const endpointUrl = VolxyseatEndpoints.endpoints.getSubscriptionById(
+      apiUrl,
+      id
+    );
+    return this.http.get(endpointUrl);
   }
 
   getAll(): Observable<ISubscription[]> {
     return this.http.get<ISubscription[]>(this.apiUrl);
   }
 
-  getDetalhesPlano(id: number, header: HttpHeaders): Observable<any> {
+  getSubscriptionDetails(id: number, header: HttpHeaders): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<any>(url, { headers: header });
   }

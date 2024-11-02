@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [MatMenuModule, CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent {
   username: string | null = null;
@@ -46,17 +46,17 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe(
-      () => {
+    this.logOutService.logout().subscribe({
+      next: () => {
         localStorage.clear();
         this.username = null;
         this.isAuthenticated = false;
         this.router.navigate(['/']);
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Erro ao fazer logout:', error);
       }
-    );
+    });
   }
 
   getTransaction(): Observable<any> {
