@@ -1,77 +1,47 @@
 import { Component } from '@angular/core';
-import { TransactionService } from '../../services/transaction.service';
-import { SubscriptionService } from '../../services/subscription.service';
-import { Router } from '@angular/router';
-import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
-import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+
+interface Item {
+  description: string;
+  qty: number;
+  price: number;
+  totalAmount: number;
+}
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [],
+  imports: [
+    MatIconModule,
+    MatCardModule,
+    MatButtonModule,
+    MatInputModule,
+    MatTableModule
+  ],
   templateUrl: './payment.component.html',
-  styleUrl: './payment.component.css',
+  styleUrls: ['./payment.component.css']
 })
 export class PaymentComponent {
-  planoSelecionado: ISubscription;
-  username: string | null = null;
-  transaction: any;
-  planId: string = '';
+  items: Item[] = [
+    { description: 'Website Design', qty: 1, price: 1500.00, totalAmount: 1500.00 },
+    { description: 'Logo Design', qty: 1, price: 500.00, totalAmount: 500.00 },
+    { description: 'SEO Optimization', qty: 5, price: 50.13, totalAmount: 250.65 }
+  ];
 
-  ngOnInit() {}
+  client = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    invoiceDate: 'July 15, 2023'
+  };
 
-  constructor(
-    private subService: SubscriptionService,
-    private tranService: TransactionService,
-    private router: Router
-  ) {
-    this.planoSelecionado = this.subService.getPlano();
-    let subscriptionId = localStorage.getItem('subId');
-    if (subscriptionId === null) {
-      throw new Error('teste');
-    }
-
-    this.subService
-      .getById(subscriptionId)
-      .subscribe((plano: ISubscription) => {
-        this.planoSelecionado = plano;
-        console.log(plano);
-        this.planId = this.planoSelecionado.id;
-        localStorage.setItem('subId', this.planoSelecionado.id);
-      });
-
-    this.transaction = this.tranService
-      .getById(localStorage.getItem('transactionId'))
-      .subscribe((response: any) => {
-        console.log(response);
-        return response;
-      });
-  }
-
-  checkUserLogin() {
-    this.username = localStorage.getItem('username');
-  }
-
-  public newTransaction: ITransaction = new ITransaction();
-  public clientId: string | null = localStorage.getItem('clientId');
-
-  insertPayment() {
-    console.log(this.clientId);
-    console.log(this.planId);
-    if (this.planId !== null && this.clientId !== null) {
-      this.newTransaction.client = this.clientId;
-      this.newTransaction.subscription = this.planId;
-    }
-
-    this.tranService.post(this.newTransaction).subscribe(
-      (response: any) => {
-        localStorage.setItem('transactionId', response.id);
-        this.router.navigate(['/']);
-        return response;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-  }
+  invoice = {
+    number: '42D42-0001',
+    amount: 2250.65,
+    status: 'Open',
+    dueDate: 'Due next month'
+  };
 }

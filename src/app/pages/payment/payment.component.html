@@ -1,83 +1,102 @@
-<section class="payment-sec">
-  <div class="payment-container">
-    <div class="payment-title">
-      <h1>Informações do Usuário</h1>
-    </div>
-    <div class="payment-context">
-      <div class="payment-label">
-        <label for="name">Nome:</label>
-        <input type="text" name="name" id="name" required />
-      </div>
-
-      <div class="payment-label">
-        <label for="lastname">Sobrenome:</label>
-        <input type="text" name="lastname" id="lastname" required />
-      </div>
-
-      <div class="payment-label">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required />
-      </div>
-
-      <div class="payment-label">
-        <label for="phone">Telefone:</label>
-        <input type="number" name="phone" id="phone" required />
-      </div>
-    </div>
-
-    <div class="method-title">
-      <h1>Método de Pagamento</h1>
-    </div>
-
-    <div class="payment-method">
-      <div class="method-container">
-        <h1><i class="fa-brands fa-pix" style="color: #fb812c"></i></h1>
-      </div>
-
-      <div class="method-container">
-        <h1><i class="fa-solid fa-credit-card" style="color: #fb812c"></i></h1>
-      </div>
-    </div>
-    <div class="payment-content">
-      <div class="payment-info">
-        <p>
-          <i class="fa-solid fa-check" style="color: #fb812c"></i> A VOLXYSEAT
-          está comprometida em oferecer uma ótima experiência. Por isso
-          oferecemos uma garantia de 7 dias ou seu dinheiro de volta.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="payment-confirm">
-    <div class="payment-confirm-title">
-      <span>Valor total</span>
-      <h1>R${{ planoSelecionado.price }}</h1>
-      <div class="payment-security">
-        <i class="fa-solid fa-lock" style="color: #fb812c"></i>
-        Pagamento Seguro
-      </div>
-    </div>
-    <div class="payment-space"></div>
-
-    <div class="plains">
-      @if(planoSelecionado){
-      <div class="selected-plan-info">
-        <div class="plains-category">
-          <span>{{ planoSelecionado.type }}</span>
+<div class="min-h-screen flex items-center justify-center bg-white">
+  <main class="container mx-auto px-4">
+    <div class="flex flex-col lg:flex-row gap-8 justify-center items-center">
+      <!-- Coluna Esquerda com Informações da Fatura -->
+      <div class="flex-grow max-w-lg">
+        <!-- Seção de Fatura -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+          <div class="flex justify-between items-center">
+            <div class="text-center">
+              <h2 class="text-3xl font-bold">#{{ invoice.number }}</h2>
+              <p class="text-2xl font-semibold text-[#FB812C]">${{ invoice.amount }}</p>
+            </div>
+            <div class="text-right">
+              <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{{ invoice.status }}</span>
+              <p class="text-sm text-gray-500">{{ invoice.dueDate }}</p>
+            </div>
+          </div>
+          <div class="flex space-x-4 mt-4 justify-center">
+            <button class="bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 px-4 transition-transform transform hover:scale-105 flex items-center justify-center">
+              <mat-icon class="mr-2">send</mat-icon> Send Invoice
+            </button>
+            <button class="border border-[#FB812C] text-[#FB812C] hover:bg-[#FB812C] hover:text-white rounded py-2 px-4 transition-colors duration-200 flex items-center justify-center">
+              <mat-icon class="mr-2">edit</mat-icon> Edit Invoice
+            </button>
+            <button class="border border-[#FB812C] text-[#FB812C] hover:bg-[#FB812C] hover:text-white rounded py-2 px-4 transition-colors duration-200 flex items-center justify-center">
+              <mat-icon class="mr-2">add</mat-icon> Add Note
+            </button>
+          </div>
         </div>
-        <div class="plains-price">
-          <h1>R${{ planoSelecionado.price }}<span>/mês</span></h1>
+
+        <!-- Seção de Histórico -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+          <h3 class="text-lg font-semibold">History</h3>
+          <ul class="space-y-4 mt-4">
+            <li *ngFor="let action of ['Invoice created', 'Invoice sent', 'Invoice finalized']" class="flex items-center space-x-3 justify-center">
+              <div class="bg-[#FB812C] p-2 rounded-full">
+                <mat-icon class="text-white">description</mat-icon>
+              </div>
+              <div class="text-center">
+                <p class="font-medium">{{ action }}</p>
+                <p class="text-sm text-gray-500">July 15, 2023 at 2:30 PM</p>
+              </div>
+            </li>
+          </ul>
         </div>
-        <div class="plains-desc">
-          <h1>{{ planoSelecionado.description }}</h1>
+
+        <!-- Lista de Itens -->
+        <div class="bg-white rounded-lg shadow-md p-6 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-center">Items</h3>
+            <button class="border border-gray-300 text-gray-700 rounded px-2 py-1 hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center">
+              Customize columns <mat-icon class="ml-2">arrow_drop_down</mat-icon>
+            </button>
+          </div>
+          <table class="min-w-full mt-4 text-center">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="py-2 px-4 font-medium">Description</th>
+                <th class="py-2 px-4 font-medium">QTY</th>
+                <th class="py-2 px-4 font-medium">Price</th>
+                <th class="py-2 px-4 font-medium text-right">Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items" class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                <td class="py-2 px-4">{{ item.description }}</td>
+                <td class="py-2 px-4">{{ item.qty }}</td>
+                <td class="py-2 px-4">${{ item.price }}</td>
+                <td class="py-2 px-4 text-right">${{ item.totalAmount }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      }
-    </div>
 
-    <div class="payment-cta">
-      <a><button (click)="insertPayment()">FINALIZAR</button></a>
+      <!-- Coluna Direita com Informações do Cliente e Ajuda -->
+      <div class="w-full lg:w-1/3 max-w-lg">
+        <!-- Informações do Cliente -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+          <h3 class="text-lg font-semibold">Client Information</h3>
+          <div class="space-y-2 mt-4">
+            <p class="font-semibold">{{ client.name }}</p>
+            <p class="text-sm text-gray-500">{{ client.email }}</p>
+            <p class="text-sm text-gray-500">Invoice created: {{ client.invoiceDate }}</p>
+          </div>
+          <button class="w-full mt-4 bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 transition-transform transform hover:scale-105 flex items-center justify-center">
+            <mat-icon class="mr-2">description</mat-icon> Invoice PDF
+          </button>
+        </div>
+
+        <!-- Seção de Ajuda -->
+        <div class="bg-white rounded-lg shadow-md p-6 transition-transform transform hover:-translate-y-1 hover:shadow-lg text-center">
+          <h3 class="text-lg font-semibold">Need Help?</h3>
+          <p class="text-sm text-gray-500 mt-4">If you have any questions or issues, feel free to ask us.</p>
+          <button class="w-full mt-4 bg-[#FB812C] hover:bg-[#e67321] text-white rounded py-2 transition-transform transform hover:scale-105 flex items-center justify-center">
+            <mat-icon class="mr-2">help</mat-icon> Ask a question
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </main>
+</div>
