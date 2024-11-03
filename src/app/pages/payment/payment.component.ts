@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { SubscriptionService } from '../../services/subscription.service';
 import { TransactionService } from '../../services/transaction.service';
+import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
+import { CommonModule } from '@angular/common';
+import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 interface Item {
   description: string;
@@ -20,11 +25,14 @@ declare var MercadoPago: any;
   selector: 'app-payment',
   standalone: true,
   imports: [
+    CommonModule,
     MatIconModule,
     MatCardModule,
     MatButtonModule,
     MatInputModule,
     MatTableModule,
+    HeaderComponent,
+    FooterComponent
   ],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
@@ -65,9 +73,42 @@ export class PaymentComponent implements OnInit {
   ){}
 
   private cardForm: any;
+  plan: ISubscription | undefined;
+
+  fetchPlanDetails(): void {
+    const subId = localStorage.getItem('subId');
+    if (subId) {
+      this.subscriptionService.getById(subId).subscribe(
+        (plan: ISubscription) => {
+          this.plan = plan;
+        },
+        (error: any) => {
+          console.error('Error fetching plan details:', error);
+        }
+      );
+    } else {
+      console.warn('No subscription ID found in localStorage.');
+    }
+  }
+
+  subscriptionEnumToString(enumValue: SubscriptionEnum): string {
+    switch (enumValue) {
+      case 0:
+        return 'Básico';
+      case 1:
+        return 'Médio';
+      case 2:
+        return 'Avançado';
+      case 3:
+        return 'Personalizado';
+      default:
+        return 'Sem Plano';
+    }
+  }
 
   ngOnInit(): void {
     this.loadMercadoPagoScript();
+    this.fetchPlanDetails();
   }
 
   loadMercadoPagoScript(): void {

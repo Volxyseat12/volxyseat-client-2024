@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SubscriptionService } from '../../services/subscription.service';
-
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
@@ -32,12 +31,20 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   selectedCategory: string = 'Suporte';
   subscriptionProperties: { [key: string]: boolean } = {};
   isTransitioning: boolean = false;
+  hoveredCard: number | null = null; // For hover control
 
   categories = [
     { name: 'Suporte' },
     { name: 'Documentação' },
     { name: 'Funcionalidades' },
     { name: 'Suporte Prioritário' },
+  ];
+
+  features = [
+    { title: 'Recursos Premium', description: 'Acesso a todos os recursos avançados da plataforma' },
+    { title: 'Segurança Garantida', description: 'Proteção total dos seus dados e informações' },
+    { title: 'Alta Performance', description: 'Velocidade e eficiência em todas as operações' },
+    { title: 'Suporte 24/7', description: 'Assistência técnica sempre disponível!' },
   ];
 
   propertyCategoryMapping: PropertyCategoryMapping = {
@@ -146,5 +153,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._subscription.next();
     this._subscription.complete();
+  }
+
+  setHoveredCard(index: number | null) {
+    this.hoveredCard = index;
   }
 }
