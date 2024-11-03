@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff; /* Fundo branco */
+  background-color: #ffffff;
 }
 
 .container {
@@ -29,4 +29,20 @@
 
 .text-center {
   text-align: center;
+}
+.div-input {
+  height: 40px;
+}
+
+input::placeholder {
+  font-size: 16px;
+  color: black;
+}
+
+.installments {
+  display: none;
+}
+
+.issuer-input {
+  width: 100%;
 }

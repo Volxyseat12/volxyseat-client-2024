@@ -1,3 +1,4 @@
+import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
 import { Component, TemplateRef } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { LogOutService } from '../../services/log-out.service';
@@ -6,6 +7,7 @@ import { Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
+import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +23,8 @@ export class HeaderComponent {
   isWideScreen = window.innerWidth > 930;
   teste: string = '';
   showDropdown: boolean = false;
+  userPlanType: string | null = null;
+  userPlan: ISubscription | null = null;
 
   constructor(
     private logOutService: LogOutService,
@@ -31,7 +35,27 @@ export class HeaderComponent {
     this.checkUserLogin();
   }
 
+  subscriptionEnumToString(enumValue: SubscriptionEnum): string {
+    switch (enumValue) {
+      case 0:
+        return 'Básico';
+      case 1:
+        return 'Médio';
+      case 2:
+        return 'Avançado';
+      case 3:
+        return 'Personalizado';
+      default:
+        return 'Sem Plano';
+    }
+  }
+
   checkUserLogin() {
+    this.getTransaction();
+    this.userPlanType = this.subscriptionEnumToString(
+      <SubscriptionEnum>this.userPlan?.type
+    );
+    console.log(this.userPlanType);
     const token = localStorage.getItem('token');
     this.username = localStorage.getItem('username');
     this.isAuthenticated = !!token;
@@ -55,12 +79,19 @@ export class HeaderComponent {
       },
       error: (error: any) => {
         console.error('Erro ao fazer logout:', error);
-      }
+      },
     });
   }
 
-  getTransaction(): Observable<any> {
-    return this.tranService.getById(localStorage.getItem('transactionId'));
+  getTransaction(): void {
+    this.tranService.getById(localStorage.getItem('clientId')).subscribe({
+      next: (res) => {
+        this.userPlan = <ISubscription>res;
+      },
+      error: (error: any) => {
+        console.log(error.message);
+      },
+    });
   }
 
   // getSubscriptionId() {

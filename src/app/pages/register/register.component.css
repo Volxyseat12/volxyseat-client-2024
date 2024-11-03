@@ -1,7 +1,7 @@
 .register-container {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* Imagem maior que o formulário */
-  height: 100vh;
+  grid-template-columns: 1fr 2fr;
+  height: 100%;
   width: 100%;
   overflow: hidden;
 }
@@ -17,7 +17,7 @@
 .register-banner img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Garante que a imagem cubra o contêiner sem distorcer */
+  object-fit: cover;
 }
 
 .register-context {
@@ -27,10 +27,10 @@
   justify-content: center;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem; /* Ajustado para melhorar o alinhamento */
-  background: rgba(255, 255, 255, 0.9); /* Fundo mais opaco para legibilidade */
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar o formulário */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .register-forms {
@@ -43,7 +43,7 @@
 }
 
 .register-logo img {
-  width: 120px; /* Tamanho compacto para o logo */
+  width: 120px;
   margin-bottom: 1rem;
 }
 
@@ -123,7 +123,36 @@ button:hover {
 
 @media (max-width: 1500px) {
   .register-container {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.5fr;
+  }
+
+  .register-context {
+    padding: 0 1rem;
+  }
+
+  .register-logo img {
+    width: 3rem;
+  }
+
+  .register-title h1 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .register-label {
+    margin-bottom: 0;
+  }
+
+  input {
+    border-radius: 8px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    height: 2rem;
+    width: 100%;
+    font-size: 1rem;
+    padding: 0 12px;
+    outline: none;
   }
 }
 
@@ -134,11 +163,6 @@ button:hover {
 
   .register-banner {
     display: none;
-  }
-
-  .register-context {
-    padding: 1.5rem;
-    max-width: 90%;
   }
 
   .register-title h1 {

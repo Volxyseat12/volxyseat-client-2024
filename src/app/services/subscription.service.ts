@@ -26,10 +26,10 @@ export class SubscriptionService {
 
   getSubscriptionTypeText(type: SubscriptionEnum): string {
     const typeMap: { [key: number]: string } = {
-      [SubscriptionEnum.Basic]: 'Basic',
-      [SubscriptionEnum.Medium]: 'Medium',
-      [SubscriptionEnum.Advanced]: 'Advanced',
-      [SubscriptionEnum.Personalized]: 'Personalized',
+      [SubscriptionEnum.Basic]: 'Básico',
+      [SubscriptionEnum.Medium]: 'Médio',
+      [SubscriptionEnum.Advanced]: 'Avançado',
+      [SubscriptionEnum.Personalized]: 'Personalizado',
     };
     return typeMap[type] || 'Unknown';
   }

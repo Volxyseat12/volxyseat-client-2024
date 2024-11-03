@@ -74,13 +74,13 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   subscriptionEnumToString(enumValue: number): string {
     switch (enumValue) {
       case 0:
-        return 'Basic';
+        return 'Básico';
       case 1:
-        return 'Medium';
+        return 'Médio';
       case 2:
-        return 'Advanced';
+        return 'Avançado';
       case 3:
-        return 'Personalized';
+        return 'Personalizado';
       default:
         return 'Unknown';
     }
@@ -109,7 +109,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   selectSubscription(subscriptionId: string) {
     localStorage.setItem('subId', subscriptionId);
-    this.router.navigate(['/payment']);
+    const token = localStorage.getItem('token');
+    if (token) this.router.navigate(['/payment']);
+    else this.router.navigate(['/login']);
   }
 
   setSubscriptionProperties(subscription: ISubscription): void {
