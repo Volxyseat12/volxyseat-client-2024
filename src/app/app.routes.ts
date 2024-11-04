@@ -7,6 +7,7 @@ import { SubscriptionComponent } from './pages/subscription/subscription.compone
 import { PaymentComponent } from './pages/payment/payment.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileSubscriptionsComponent } from './pages/profile-subscriptions/profile-subscriptions.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
@@ -16,5 +17,6 @@ export const routes: Routes = [
     { path: 'payment', component: PaymentComponent },
     { path: 'profile', component: ProfileComponent },
     { path: 'profile-subscriptions', component: ProfileSubscriptionsComponent },
+    { path: 'admin', component: AdminComponent }
 
 ];
