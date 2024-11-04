@@ -6,6 +6,7 @@ export interface Endpoints {
   getSubscriptionById: (apiUrl: string, id: string) => string;
 
   getTransactionById: (apiUrl: string, id: string) => string;
+  createTransaction: (apiUrl: string) => string;
 
   logout: (apiUrl: string) => string;
 }
@@ -26,6 +27,7 @@ export namespace VolxyseatEndpoints {
 
     getTransactionById: (apiUrl: string, id: string) =>
       `${apiUrl}${base}/Transaction/${id}`,
+    createTransaction: (apiUrl: string) => `${apiUrl}${base}/Transaction/`,
 
     logout: (apiUrl: string): string => `${apiUrl}${base}/User/logout`,
   };

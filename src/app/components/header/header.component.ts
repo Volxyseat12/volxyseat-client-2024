@@ -8,6 +8,7 @@ import { TransactionService } from '../../services/transaction.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
+import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +26,7 @@ export class HeaderComponent {
   showDropdown: boolean = false;
   userPlanType: string | null = null;
   userPlan: ISubscription | null = null;
+  userTransaction: ITransaction | null = null;
 
   constructor(
     private logOutService: LogOutService,
@@ -52,10 +54,6 @@ export class HeaderComponent {
 
   checkUserLogin() {
     this.getTransaction();
-    this.userPlanType = this.subscriptionEnumToString(
-      <SubscriptionEnum>this.userPlan?.type
-    );
-    console.log(this.userPlanType);
     const token = localStorage.getItem('token');
     this.username = localStorage.getItem('username');
     this.isAuthenticated = !!token;
@@ -86,7 +84,8 @@ export class HeaderComponent {
   getTransaction(): void {
     this.tranService.getById(localStorage.getItem('clientId')).subscribe({
       next: (res) => {
-        this.userPlan = <ISubscription>res;
+        this.userTransaction = <ITransaction>res;
+        this.getSubscriptionById(<string>this.userTransaction?.subscriptionId);
       },
       error: (error: any) => {
         console.log(error.message);
@@ -113,7 +112,15 @@ export class HeaderComponent {
   //     );
   // }
 
-  getSubscriptionById(id: string): Observable<any> {
-    return this.subService.getById(id);
+  getSubscriptionById(id: string): void {
+    this.subService.getById(id).subscribe({
+      next: (res: any) => {
+        this.userPlan = res;
+        this.userPlanType = this.subscriptionEnumToString(
+          <SubscriptionEnum>this.userPlan?.type
+        );
+        console.log(this.userPlan);
+      },
+    });
   }
 }

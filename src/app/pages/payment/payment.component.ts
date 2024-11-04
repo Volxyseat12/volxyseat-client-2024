@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 
 interface Item {
   description: string;
@@ -32,7 +33,7 @@ declare var MercadoPago: any;
     MatInputModule,
     MatTableModule,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
   ],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
@@ -70,7 +71,7 @@ export class PaymentComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private transactionService: TransactionService
-  ){}
+  ) {}
 
   private cardForm: any;
   plan: ISubscription | undefined;
@@ -88,6 +89,26 @@ export class PaymentComponent implements OnInit {
       );
     } else {
       console.warn('No subscription ID found in localStorage.');
+    }
+  }
+
+  createTransaction() {
+    const subId = localStorage.getItem('subId');
+    const clientId = localStorage.getItem('clientId');
+    console.log(`${subId}\n${clientId}`);
+    if (subId) {
+      const transaction: ITransaction = {
+        clientId: clientId,
+        subscriptionId: subId,
+      };
+      this.transactionService.post(transaction).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err.message);
+        },
+      });
     }
   }
 
@@ -204,5 +225,7 @@ export class PaymentComponent implements OnInit {
     } = formData;
 
     console.log(token);
+
+    this.createTransaction();
   }
 }
