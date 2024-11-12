@@ -12,6 +12,8 @@ import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
+import { ICreateSubscription } from '../../models/MercadoPago/ICreateSubscription';
+import { MercadoPagoService } from '../../services/mercado-pago.service';
 
 interface Item {
   description: string;
@@ -39,6 +41,11 @@ declare var MercadoPago: any;
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
+  async ngOnInit(): Promise<void> {
+    await this.fetchPlanDetails();
+    this.loadMercadoPagoScript();
+  }
+
   items: Item[] = [
     {
       description: 'Website Design',
@@ -70,49 +77,35 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private subscriptionService: SubscriptionService,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private mercadoPagoService: MercadoPagoService
   ) {}
 
   private cardForm: any;
   plan: ISubscription | undefined;
 
-  fetchPlanDetails(): void {
-    const subId = localStorage.getItem('subId');
-    if (subId) {
-      this.subscriptionService.getById(subId).subscribe(
-        (plan: ISubscription) => {
-          this.plan = plan;
-        },
-        (error: any) => {
-          console.error('Error fetching plan details:', error);
-        }
-      );
-    } else {
-      console.warn('No subscription ID found in localStorage.');
-    }
+  fetchPlanDetails(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const subId = localStorage.getItem('subId');
+      if (subId) {
+        this.subscriptionService.getById(subId).subscribe(
+          (plan: ISubscription) => {
+            this.plan = plan;
+            resolve();
+          },
+          (error: any) => {
+            console.error('Error fetching plan details:', error);
+            reject(error);
+          }
+        );
+      } else {
+        console.warn('No subscription ID found in localStorage.');
+        reject(new Error('No subscription ID found in localStorage.'));
+      }
+    });
   }
 
-  createTransaction() {
-    const subId = localStorage.getItem('subId');
-    const clientId = localStorage.getItem('clientId');
-    console.log(`${subId}\n${clientId}`);
-    if (subId) {
-      const transaction: ITransaction = {
-        clientId: clientId,
-        subscriptionId: subId,
-      };
-      this.transactionService.post(transaction).subscribe({
-        next: (res) => {
-          console.log(res);
-        },
-        error: (err) => {
-          console.log(err.message);
-        },
-      });
-    }
-  }
-
-  subscriptionEnumToString(enumValue: SubscriptionEnum): string {
+  subscriptionEnumToString(enumValue: SubscriptionEnum | undefined): string {
     switch (enumValue) {
       case 0:
         return 'Básico';
@@ -125,11 +118,6 @@ export class PaymentComponent implements OnInit {
       default:
         return 'Sem Plano';
     }
-  }
-
-  ngOnInit(): void {
-    this.loadMercadoPagoScript();
-    this.fetchPlanDetails();
   }
 
   loadMercadoPagoScript(): void {
@@ -145,66 +133,101 @@ export class PaymentComponent implements OnInit {
   }
 
   initializeCardForm(): void {
-    setTimeout(() => {
-      const mp = new MercadoPago(
-        'APP_USR-de38ecaf-579b-43df-aa7c-721e05f875f1',
-        {
-          locale: 'en-US',
-        }
-      );
-      this.cardForm = mp.cardForm({
-        amount: this.invoice.amount.toString(),
-        iframe: true,
-        form: {
-          id: 'form-checkout',
-          cardNumber: {
-            id: 'form-checkout__cardNumber',
-            placeholder: 'Card Number',
-          },
-          expirationDate: {
-            id: 'form-checkout__expirationDate',
-            placeholder: 'MM/YY',
-          },
-          securityCode: {
-            id: 'form-checkout__securityCode',
-            placeholder: 'Security Code',
-          },
-          cardholderName: {
-            id: 'form-checkout__cardholderName',
-            placeholder: 'Cardholder',
-          },
-          issuer: {
-            id: 'form-checkout__issuer',
-            placeholder: 'Issuing bank',
-          },
-          installments: {
-            id: 'form-checkout__installments',
-            placeholder: 'Installments',
-          },
-          identificationType: {
-            id: 'form-checkout__identificationType',
-            placeholder: 'Document type',
-          },
-          identificationNumber: {
-            id: 'form-checkout__identificationNumber',
-            placeholder: 'Document number',
-          },
-          cardholderEmail: {
-            id: 'form-checkout__cardholderEmail',
-            placeholder: 'Email',
-          },
+    const mp = new MercadoPago('APP_USR-c94f03a6-3fc8-45b2-98a1-8b1df97ada67', {
+      locale: 'en-US',
+    });
+
+    if (!this.plan) throw new Error('No plan was found');
+
+    this.cardForm = mp.cardForm({
+      amount: this.plan.price.toString(),
+      iframe: true,
+      form: {
+        id: 'form-checkout',
+        cardNumber: {
+          id: 'form-checkout__cardNumber',
+          placeholder: 'Card Number',
         },
-        callbacks: {
-          onFormMounted: (error: any) => {
-            if (error) console.warn('Form Mounted handling error: ', error);
-            else console.log('Form mounted');
-          },
-          onSubmit: (event: Event) => this.processPayment(event),
-          onFetching: (resource: any) =>
-            console.log('Fetching resource:', resource),
+        expirationDate: {
+          id: 'form-checkout__expirationDate',
+          placeholder: 'MM/YY',
+        },
+        securityCode: {
+          id: 'form-checkout__securityCode',
+          placeholder: 'Security Code',
+        },
+        cardholderName: {
+          id: 'form-checkout__cardholderName',
+          placeholder: 'Cardholder',
+        },
+        issuer: {
+          id: 'form-checkout__issuer',
+          placeholder: 'Issuing bank',
+        },
+        installments: {
+          id: 'form-checkout__installments',
+          placeholder: 'Installments',
+        },
+        identificationType: {
+          id: 'form-checkout__identificationType',
+          placeholder: 'Document type',
+        },
+        identificationNumber: {
+          id: 'form-checkout__identificationNumber',
+          placeholder: 'Document number',
+        },
+        cardholderEmail: {
+          id: 'form-checkout__cardholderEmail',
+          placeholder: 'Email',
+        },
+      },
+      callbacks: {
+        onFormMounted: (error: any) => {
+          if (error) console.warn('Form Mounted handling error: ', error);
+          else console.log('Form mounted');
+        },
+        onSubmit: (event: Event) => this.processPayment(event),
+        onFetching: (resource: any) =>
+          console.log('Fetching resource:', resource),
+      },
+    });
+  }
+
+  createTransaction() {
+    const subId = localStorage.getItem('subId');
+    const clientId = localStorage.getItem('clientId');
+    console.log(`${subId}\n${clientId}`);
+    if (subId && clientId && this.plan?.mercadoPagoPlanId) {
+      const transaction: ITransaction = {
+        clientId: clientId,
+        subscriptionId: subId,
+        mercadoPagoSubscriptionId: this.plan?.mercadoPagoPlanId,
+      };
+      this.transactionService.post(transaction).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) => {
+          console.log(err.message);
         },
       });
-    }, 100);
+    }
+  }
+
+  createMercadoPagoSubscription(
+    createMercadoPagoSubscriptionModel: ICreateSubscription
+  ): void {
+    this.mercadoPagoService
+      .createMercadoPagoSubscription(createMercadoPagoSubscriptionModel)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          // this.createTransaction();
+        },
+        error: (err) => {
+          console.error(err.message);
+        },
+      });
   }
 
   processPayment(event: Event): void {
@@ -224,8 +247,24 @@ export class PaymentComponent implements OnInit {
       token,
     } = formData;
 
-    console.log(token);
+    if (this.plan) {
+      const todayDate = new Date();
+      const { mercadoPagoPlanId, type, price } = this.plan;
+      console.log(mercadoPagoPlanId);
+      const createSubscription: ICreateSubscription = {
+        preapproval_plan_id: mercadoPagoPlanId,
+        reason: this.subscriptionEnumToString(type),
+        email: email,
+        amount: price,
+        billing_day: todayDate.getDate(),
+        cardTokenId: token,
+      };
+      console.log(createSubscription);
+      this.createMercadoPagoSubscription(createSubscription);
+      return;
+    }
 
-    this.createTransaction();
+    console.error('Erro ao criar subscription no mercado pago');
+    // this.createTransaction();
   }
 }

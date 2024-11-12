@@ -1,46 +1,64 @@
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 import { TransactionService } from './../../services/transaction.service';
 import { Component } from '@angular/core';
 
+import { LoginService } from '../../services/login.service';
+
+import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CookiepopupComponent } from '../../components/cookiepopup/cookiepopup.component';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 import { ILogin } from '../../models/SubscriptionModel/ILogin';
-import { ToastService } from 'angular-toastify';
-import { AuthService } from '../../services/auth/auth.service';
+
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
+    CookiepopupComponent,
     FormsModule,
+    ToastModule,
     ButtonModule,
     RippleModule,
     CommonModule,
   ],
   templateUrl: './login.component.html',
+  providers: [MessageService],
   styleUrls: ['./login.component.css'],
 })
-
 export class LoginComponent {
+  cookiesAceitos: boolean;
   transactionId!: string;
-
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private cookieService: CookieService,
+    private loginService: LoginService,
     private transactionService: TransactionService,
-    private _toastService: ToastService
+    private messageService: MessageService
   ) {
+    this.cookiesAceitos = this.cookieService.get('aceitou_cookies') === 'true';
+  }
+
+  showSuccess() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Login realizado com sucesso!',
+    });
   }
 
   public loginRequest: ILogin = {
-    email: '',
+    userName: '',
     password: '',
   };
 
   login() {
-    this.authService.login(this.loginRequest).subscribe({
+    this.loginService.post(this.loginRequest).subscribe({
       next: (response: any) => {
         this.transactionService.getById(response.clientId).subscribe({
           next: (transactionResponse: any) => {
@@ -55,12 +73,11 @@ export class LoginComponent {
         localStorage.setItem('username', response.name);
         localStorage.setItem('clientId', response.clientId);
         localStorage.setItem('transactionId', this.transactionId);
-        this._toastService.success('Login successful!');
+        this.showSuccess();
         this.router.navigate(['/']);
       },
       error: (error: any) => {
         console.log('Erro ao fazer login!', error);
-        this._toastService.error('Login failed!');
       },
     });
   }

@@ -18,14 +18,14 @@
       <a href="/admin"
         class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition">
         <i class="pi pi-cog text-gray-700"></i>
-        <span>Administrador</span>
+        <span>Admin</span>
       </a>
     </nav>
   </aside>
 
   <main class="flex-1 p-8">
     <div class="mb-8 flex items-center justify-between">
-      <h2 class="text-3xl font-bold text-orange-500 uppercase">PERFIL DO USUÁRIO</h2>
+      <h2 class="text-3xl font-bold text-orange-500 uppercase">User Profile</h2>
       <div class="flex items-center space-x-4">
         <div class="relative">
           <button (click)="toggleDropdown()"
@@ -36,8 +36,9 @@
 
           <div *ngIf="showDropdown"
             class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Perfil</a>
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()">Desconectar</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()">Log
+              out</a>
           </div>
         </div>
       </div>
@@ -45,10 +46,10 @@
 
     <div class="grid gap-8 md:grid-cols-2">
       <div class="rounded-lg bg-white p-6 shadow-md">
-        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Informações Pessoais</h3>
+        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Personal Information</h3>
         <form class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-600" for="name">Nome</label>
+            <label class="block text-sm font-medium text-gray-600" for="name">Name</label>
             <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="name" type="text" value="John Doe" />
           </div>
           <div>
@@ -58,17 +59,17 @@
           </div>
           <button
             class="px-4 py-2 uppercase font-bold text-white bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md transition">
-            Salvar
+            Edit Profile
           </button>
         </form>
       </div>
 
       <div class="rounded-lg bg-white p-6 shadow-md">
-        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Gerenciamento de Planos</h3>
+        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Subscription Management</h3>
         <div class="space-y-4">
           <div>
-            <p class="text-sm font-medium text-gray-600">Plano Atual</p>
-            <p class="text-lg font-semibold text-gray-800">Plano Pro</p>
+            <p class="text-sm font-medium text-gray-600">Current Plan</p>
+            <p class="text-lg font-semibold text-gray-800">Pro Plan</p>
           </div>
           <!-- <div>
               <p class="text-sm font-medium text-gray-600">Next Billing Date</p>
@@ -76,20 +77,20 @@
             </div> -->
           <button
             class="px-4 py-2 border uppercase font-bold border-orange-500 text-orange-500 hover:bg-orange-50 rounded-lg shadow-md transition">
-            Editar Plano
+            Manage Subscription
           </button>
         </div>
       </div>
 
       <div class="rounded-lg bg-white p-6 shadow-md md:col-span-2">
-        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Histórico de Compras</h3>
+        <h3 class="mb-4 text-xl font-semibold text-gray-800 uppercase">Purchase History</h3>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead>
               <tr class="bg-orange-50">
-                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Data</th>
-                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Plano</th>
-                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Valor</th>
+                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Date</th>
+                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Plan</th>
+                <th class="px-6 py-3 uppercase font-bold text-left text-sm text-orange-500">Amount</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
