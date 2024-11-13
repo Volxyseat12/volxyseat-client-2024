@@ -1,0 +1,36 @@
+<div
+  class="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-green-100 overflow-hidden"
+>
+  <div class="w-full max-w-md relative">
+    <div
+      [@scaleAnimation]="isVisible ? 'visible' : 'hidden'"
+      class="mb-6 relative rounded-full bg-green-100 p-3"
+    >
+      <div class="w-16 h-16 text-green-600">
+        <svg> <!-- SVG Check Icon --> </svg>
+      </div>
+      <ng-container *ngIf="showConfetti">
+        <app-particle *ngFor="let i of particles" [delay]="i * 0.1"></app-particle>
+      </ng-container>
+    </div>
+    <div
+      [@fadeInAnimation]="isVisible ? 'visible' : 'hidden'"
+      class="relative text-center"
+    >
+      <h2 class="text-3xl font-bold mb-2 text-green-800">Success!</h2>
+      <div class="absolute -right-6 -top-6">
+        <svg> <!-- SVG Sparkles Icon --> </svg>
+      </div>
+      <p class="text-lg text-green-600 mb-6">
+        Your payment has been processed successfully.
+      </p>
+      <button
+        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
+        (click)="goToDashboard()"
+      >
+        Go to Dashboard
+        <svg> <!-- SVG ArrowRight Icon --> </svg>
+      </button>
+    </div>
+  </div>
+</div>
