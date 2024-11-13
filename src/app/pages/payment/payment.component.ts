@@ -14,6 +14,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { ICreateSubscription } from '../../models/MercadoPago/ICreateSubscription';
 import { MercadoPagoService } from '../../services/mercado-pago.service';
+import { environment } from '../../environments/environment';
 
 interface Item {
   description: string;
@@ -133,7 +134,7 @@ export class PaymentComponent implements OnInit {
   }
 
   initializeCardForm(): void {
-    const mp = new MercadoPago('APP_USR-c94f03a6-3fc8-45b2-98a1-8b1df97ada67', {
+    const mp = new MercadoPago(environment.mercadoPagoPublicKey, {
       locale: 'en-US',
     });
 
