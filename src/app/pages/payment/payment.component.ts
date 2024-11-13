@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,9 @@ import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { ICreateSubscription } from '../../models/MercadoPago/ICreateSubscription';
 import { MercadoPagoService } from '../../services/mercado-pago.service';
 import { environment } from '../../environments/environment';
+import { SuccessComponent } from '../../components/success/success.component';
+import { FailComponent } from '../../components/fail/fail.component';
+import { Router } from '@angular/router';
 
 interface Item {
   description: string;
@@ -27,7 +30,6 @@ declare var MercadoPago: any;
 
 @Component({
   selector: 'app-payment',
-  standalone: true,
   imports: [
     CommonModule,
     MatIconModule,
@@ -37,9 +39,13 @@ declare var MercadoPago: any;
     MatTableModule,
     HeaderComponent,
     FooterComponent,
+    SuccessComponent,
+    FailComponent
   ],
+  standalone: true,
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PaymentComponent implements OnInit {
   async ngOnInit(): Promise<void> {
@@ -79,7 +85,8 @@ export class PaymentComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private transactionService: TransactionService,
-    private mercadoPagoService: MercadoPagoService
+    private mercadoPagoService: MercadoPagoService,
+    private router: Router
   ) {}
 
   private cardForm: any;
@@ -207,12 +214,24 @@ export class PaymentComponent implements OnInit {
       this.transactionService.post(transaction).subscribe({
         next: (res) => {
           console.log(res);
+          this.onSuccess();
         },
         error: (err) => {
           console.log(err.message);
+          this.onFail();
         },
       });
     }
+  }
+
+  onSuccess(): void {
+    // Navega para a rota de sucesso
+    this.router.navigate(['/success']);
+  }
+
+  onFail(): void {
+    // Navega para a rota de falha
+    this.router.navigate(['/fail']);
   }
 
   createMercadoPagoSubscription(

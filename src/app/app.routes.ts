@@ -8,6 +8,8 @@ import { PaymentComponent } from './pages/payment/payment.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileSubscriptionsComponent } from './pages/profile-subscriptions/profile-subscriptions.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { SuccessComponent } from './components/success/success.component';
+import { FailComponent } from './components/fail/fail.component';
 import { AuthGuard } from './services/auth/auth.guard';
 
 export const routes: Routes = [
@@ -19,5 +21,7 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]  },
     { path: 'profile-subscriptions', component: ProfileSubscriptionsComponent },
     { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+    { path: 'success', component: SuccessComponent },
+    { path: 'fail', component: FailComponent }
 
 ];
