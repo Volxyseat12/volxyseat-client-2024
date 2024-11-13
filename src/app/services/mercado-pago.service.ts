@@ -12,10 +12,10 @@ export class MercadoPagoService {
   apiUrl: string = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  createMercadoPagoSubscription(apiUrl: any) {
+  createMercadoPagoSubscription(subscriptionRequest: any) {
     const createSubscriptionUrl =
       VolxyseatEndpoints.endpoints.createMPSubscription(this.apiUrl);
 
-    return this.http.post(`${createSubscriptionUrl}`, apiUrl);
+    return this.http.post(`${createSubscriptionUrl}`, subscriptionRequest);
   }
 }
