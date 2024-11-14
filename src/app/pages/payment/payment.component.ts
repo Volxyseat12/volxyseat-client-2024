@@ -1,4 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +23,7 @@ import { environment } from '../../environments/environment';
 import { SuccessComponent } from '../../components/success/success.component';
 import { FailComponent } from '../../components/fail/fail.component';
 import { Router } from '@angular/router';
+import { IPreApprovalResponse } from '../../models/MercadoPago/IPreApprovalResponse';
 
 interface Item {
   description: string;
@@ -40,7 +46,7 @@ declare var MercadoPago: any;
     HeaderComponent,
     FooterComponent,
     SuccessComponent,
-    FailComponent
+    FailComponent,
   ],
   standalone: true,
   templateUrl: './payment.component.html',
@@ -242,10 +248,13 @@ export class PaymentComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log(res);
-          // this.createTransaction();
+          let preApproval = <IPreApprovalResponse>res;
+          localStorage.setItem('preApprovalId', preApproval.id);
+          this.onSuccess();
         },
         error: (err) => {
           console.error(err.message);
+          this.onFail();
         },
       });
   }
