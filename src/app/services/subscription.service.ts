@@ -20,10 +20,6 @@ export class SubscriptionService {
 
   planoSelecionado: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  get subscriptions$(): Observable<ISubscription[]> {
-    return this._subscription.asObservable();
-  }
-
   getSubscriptionTypeText(type: SubscriptionEnum): string {
     const typeMap: { [key: number]: string } = {
       [SubscriptionEnum.Basic]: 'Básico',
@@ -32,12 +28,6 @@ export class SubscriptionService {
       [SubscriptionEnum.Personalized]: 'Personalizado',
     };
     return typeMap[type] || 'Unknown';
-  }
-
-  getSubscriptions(): Observable<ISubscription[]> {
-    const apiUrl = environment.apiUrl;
-    const endpointUrl = VolxyseatEndpoints.endpoints.getSubscriptions(apiUrl);
-    return this.http.get<ISubscription[]>(endpointUrl);
   }
 
   setPlano(plano: any) {

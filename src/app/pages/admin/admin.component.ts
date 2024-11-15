@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
+import { SubscriptionService } from '../../services/subscription.service';
 
 interface ISubscription {
   id: string;
@@ -26,9 +27,9 @@ interface ISubscription {
     MatInputModule,
     MatTableModule,
     MatIconModule
-  ]
+]
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit{
   SubscriptionEnum = SubscriptionEnum;
   username: string | null = null;
   isAuthenticated: boolean = false;
@@ -36,26 +37,22 @@ export class AdminComponent {
   showTypeDropdown: boolean = false;
   selectedType: SubscriptionEnum | null = null;
 
-  subscriptions: ISubscription[] = [
-    {
-      id: '1',
-      type: SubscriptionEnum.Basic,
-      description: 'Access to basic features and limited support.',
-      price: 19.99
-    },
-    {
-      id: '2',
-      type: SubscriptionEnum.Medium,
-      description: 'Access to all standard features and priority support.',
-      price: 59.99
-    },
-    {
-      id: '3',
-      type: SubscriptionEnum.Personalized,
-      description: 'Comprehensive access to advanced features and 24/7 support.',
-      price: 199.99
-    }
-  ];
+  constructor(private logOutService: LogOutService, private router: Router, private subscriptionService: SubscriptionService) {
+    this.checkUserLogin();
+  }
+
+  ngOnInit(){
+    this.getSubscriptions();
+  }
+
+  subscriptions?: ISubscription[];
+
+  getSubscriptions(){
+    this.subscriptionService.getAll().subscribe((subscriptions) => {
+      this.subscriptions = subscriptions;
+      console.log(subscriptions);
+    })
+  }
 
   subscriptionTypes = [
     SubscriptionEnum.Basic,
@@ -64,9 +61,7 @@ export class AdminComponent {
     SubscriptionEnum.Personalized
   ];
 
-  constructor(private logOutService: LogOutService, private router: Router) {
-    this.checkUserLogin();
-  }
+
 
   subscriptionEnumToString(enumValue: SubscriptionEnum): string {
     switch (enumValue) {
@@ -91,12 +86,12 @@ export class AdminComponent {
 
   toggleUserDropdown(): void {
     this.showDropdown = !this.showDropdown;
-    this.showTypeDropdown = false; // Close the type dropdown when user dropdown is toggled
+    this.showTypeDropdown = false;
   }
 
   toggleTypeDropdown(): void {
     this.showTypeDropdown = !this.showTypeDropdown;
-    this.showDropdown = false; // Close the user dropdown when type dropdown is toggled
+    this.showDropdown = false;
   }
 
   selectType(type: SubscriptionEnum): void {

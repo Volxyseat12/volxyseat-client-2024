@@ -6,7 +6,7 @@
     z-index: 1000;
     color: white;
     width: 100%;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .cookie-context {
@@ -24,15 +24,33 @@
     line-height: normal;
 }
 
-.cookie-context button {
+.btn-accept {
     padding: 1rem;
     border-radius: 10px;
     background: #FB812C;
     border: none;
     color: white;
-    font-weight: 700;
+    font-weight: 500;
     cursor: pointer;
-    
+
+}
+
+.btn-accept:hover {
+  background: #fb822cd8;
+}
+
+.btn-decline {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #FB812C;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+.btn-decline:hover{
+  color: lightgray;
+  background-color: #2b2a2a;
 }
 
 @media (max-width: 1436px) {

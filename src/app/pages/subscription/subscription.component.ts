@@ -97,7 +97,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._service
-      .getSubscriptions()
+      .getAll()
       .pipe(takeUntil(this._subscription))
       .subscribe((response: ISubscription[]) => {
         this.subscriptions = response;
