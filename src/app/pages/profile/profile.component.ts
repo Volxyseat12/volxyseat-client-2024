@@ -1,7 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
+import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
+import { SubscriptionService } from '../../services/subscription.service';
+import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -10,31 +13,21 @@ import { AuthService } from '../../services/auth/auth.service';
   standalone: true,
   imports: [CommonModule]
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  subscription: ISubscription | null = null;
+  isLoading: boolean = true;
+  error: string | null = null;
   username: string | null = null;
+  showDropdown: boolean = false;
   isAuthenticated: boolean = false;
 
+  constructor(private logOutService: LogOutService,
+    private router: Router,
+    private subscriptionService: SubscriptionService) { }
 
-  constructor(private authService: AuthService, private router: Router) {
+  ngOnInit() {
     this.checkUserLogin();
-  }
-
-  showDropdown: boolean = false;
-
-  userName = 'John Doe';
-  userEmail = 'john.doe@example.com';
-  currentPlan = 'Pro Plan';
-  billingDate = 'July 1, 2023';
-  purchaseHistory = [
-    { date: 'June 1, 2023', plan: 'Pro Plan', amount: '$29.99' },
-    { date: 'May 1, 2023', plan: 'Pro Plan', amount: '$29.99' },
-    { date: 'April 1, 2023', plan: 'Basic Plan', amount: '$9.99' }
-  ];
-
-  checkUserLogin() {
-    const token = localStorage.getItem('token');
-    this.username = localStorage.getItem('username');
-    this.isAuthenticated = !!token;
+    this.loadSubscriptionFromStorage();
   }
 
   toggleDropdown() {
@@ -42,16 +35,40 @@ export class ProfileComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe(
-      () => {
-        localStorage.clear();
-        this.username = null;
-        this.isAuthenticated = false;
-        this.router.navigate(['/']);
+    this.logOutService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  getSubscriptionType(type: string) {
+    return SubscriptionEnum[type as keyof typeof SubscriptionEnum] || 'Desconhecido';
+  }
+
+  private checkUserLogin() {
+    this.username = localStorage.getItem('username');
+    this.isAuthenticated = !!this.username;
+  }
+
+  private loadSubscriptionFromStorage() {
+    const subId = localStorage.getItem('subId');
+
+    if (subId) {
+      this.loadSubscription(subId);
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  private loadSubscription(id: string) {
+    this.subscriptionService.getById(id).subscribe({
+      next: (subscription: ISubscription) => {
+        this.subscription = subscription;
+        this.isLoading = false;
       },
-      (error: any) => {
-        console.error('Erro ao fazer logout:', error);
+      error: (err: any) => {
+        this.error = err;
+        this.subscription = null;
+        this.isLoading = false;
       }
-    );
+    });
   }
 }

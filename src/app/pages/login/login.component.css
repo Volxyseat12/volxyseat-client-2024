@@ -155,6 +155,12 @@ input {
   flex-direction: column;
 }
 
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Estilos do botão de login */
 .login-login-cta {
   display: flex;

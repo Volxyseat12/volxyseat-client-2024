@@ -93,25 +93,6 @@ export class HeaderComponent {
     });
   }
 
-  // getSubscriptionId() {
-  //   this.getTransaction()
-  //     .pipe(
-  //       switchMap((transaction: any) => {
-  //         console.log(transaction.subscription);
-  //         return this.getSubscriptionById(transaction.subscription);
-  //       })
-  //     )
-  //     .subscribe(
-  //       (result: any) => {
-  //         this.teste = result.type;
-  //         console.log(result);
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //       }
-  //     );
-  // }
-
   getSubscriptionById(id: string): void {
     this.subService.getById(id).subscribe({
       next: (res: any) => {

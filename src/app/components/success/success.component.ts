@@ -21,7 +21,6 @@ import { TransactionService } from '../../services/transaction.service';
     >
       <div class="w-full max-w-md relative bg-white rounded-lg shadow-xl">
         <div class="flex flex-col items-center justify-center p-6 text-center">
-          <!-- Check icon com animação -->
           <div class="mb-6 relative" [@scaleIn]="isVisible">
             <div class="rounded-full bg-green-100 p-3" [@pulse]="isVisible">
               <div [@drawPath]="isVisible">
@@ -52,7 +51,7 @@ import { TransactionService } from '../../services/transaction.service';
 
           <!-- Título com ícone de brilho -->
           <div class="relative" [@fadeInUp]="isVisible">
-            <h2 class="text-3xl font-bold mb-2 text-green-800">Success!</h2>
+            <h2 class="text-3xl font-bold mb-2 text-green-800">Sucesso!</h2>
             <div class="absolute -right-6 -top-6" [@sparkleRotate]="isVisible">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -73,15 +72,16 @@ import { TransactionService } from '../../services/transaction.service';
 
           <!-- Mensagem de sucesso -->
           <p class="text-lg text-green-600 mb-6" [@fadeInUp]="isVisible">
-            Your payment has been processed successfully.
+            Você acabou de adquirir um novo plano.
           </p>
 
           <!-- Botão do dashboard -->
-          <button
+
+          <a href="/profile"><button
             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md flex items-center"
-            (click)="goToDashboard()"
             [@fadeInUp]="isVisible"
           >
+            Voltar para meu perfil
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -94,9 +94,8 @@ import { TransactionService } from '../../services/transaction.service';
             >
               <path d="M5 12H19M12 5l7 7-7 7" />
             </svg>
-
-            Go to Dashboard
           </button>
+          </a>
         </div>
       </div>
     </div>
@@ -187,10 +186,6 @@ export class SuccessComponent implements OnInit {
         this.showConfetti = true;
       }, 1000);
     });
-  }
-
-  goToDashboard() {
-    alert('Redirecting to dashboard...');
   }
 
   createTransaction() {
