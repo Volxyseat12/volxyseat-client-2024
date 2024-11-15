@@ -1,35 +1,15 @@
-<div
-  class="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-green-100 overflow-hidden"
->
-  <div class="w-full max-w-md relative">
-    <div
-      [@scaleAnimation]="isVisible ? 'visible' : 'hidden'"
-      class="mb-6 relative rounded-full bg-green-100 p-3"
-    >
-      <div class="w-16 h-16 text-green-600">
-        <svg> <!-- SVG Check Icon --> </svg>
-      </div>
-      <ng-container *ngIf="showConfetti">
-        <app-particle *ngFor="let i of particles" [delay]="i * 0.1"></app-particle>
-      </ng-container>
+<div class="flex flex-col items-center justify-center h-screen bg-gray-100 animate-pulse">
+  <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInUp">
+    <div class="flex items-center justify-center mb-6">
+      <svg class="w-16 h-16 text-red-500 animate__animated animate__shakeX" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
     </div>
-    <div
-      [@fadeInAnimation]="isVisible ? 'visible' : 'hidden'"
-      class="relative text-center"
-    >
-      <h2 class="text-3xl font-bold mb-2 text-green-800">Success!</h2>
-      <div class="absolute -right-6 -top-6">
-        <svg> <!-- SVG Sparkles Icon --> </svg>
-      </div>
-      <p class="text-lg text-green-600 mb-6">
-        Your payment has been processed successfully.
-      </p>
-      <button
-        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
-        (click)="goToDashboard()"
-      >
-        Go to Dashboard
-        <svg> <!-- SVG ArrowRight Icon --> </svg>
+    <h2 class="text-2xl font-bold text-gray-800 mb-2 animate__animated animate__fadeInDown">Payment Failed</h2>
+    <p class="text-gray-600 mb-6 animate__animated animate__fadeInUp">There was an issue processing your payment. Please try again.</p>
+    <div class="flex justify-center animate__animated animate__fadeInUp">
+      <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+        Try Again
       </button>
     </div>
   </div>

@@ -75,15 +75,15 @@
           <button (click)="onSuccess()">Success</button>
           <button (click)="onFail()">Fail</button>
         </div>
-        
+
       </div>
 
       <div *ngIf="plan" class="w-full lg:w-1/2 max-w-lg transition-transform transform hover:-translate-y-1">
         <div class="bg-white rounded-lg shadow-md p-6 text-center">
           <h3 class="text-lg font-semibold mb-4">Detalhes do Pedido</h3>
           <div class="flex justify-between items-center border-b border-gray-300 py-2">
-            <span class="text-gray-600">Produto</span>
-            <span class="text-gray-600">Preço</span>
+            <span class="text-gray-600 font-bold">Produto</span>
+            <span class="text-gray-600 font-bold">Preço</span>
           </div>
           <div class="flex justify-between items-center border-b border-gray-300 py-2">
             <span class="text-gray-600">{{subscriptionEnumToString(plan.type)}}</span>

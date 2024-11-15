@@ -58,36 +58,6 @@ export class PaymentComponent implements OnInit {
     await this.fetchPlanDetails();
     this.loadMercadoPagoScript();
   }
-
-  items: Item[] = [
-    {
-      description: 'Website Design',
-      qty: 1,
-      price: 1500.0,
-      totalAmount: 1500.0,
-    },
-    { description: 'Logo Design', qty: 1, price: 500.0, totalAmount: 500.0 },
-    {
-      description: 'SEO Optimization',
-      qty: 5,
-      price: 50.13,
-      totalAmount: 250.65,
-    },
-  ];
-
-  client = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    invoiceDate: 'July 15, 2023',
-  };
-
-  invoice = {
-    number: '42D42-0001',
-    amount: 2250.65,
-    status: 'Open',
-    dueDate: 'Due next month',
-  };
-
   constructor(
     private subscriptionService: SubscriptionService,
     private transactionService: TransactionService,
@@ -231,12 +201,10 @@ export class PaymentComponent implements OnInit {
   }
 
   onSuccess(): void {
-    // Navega para a rota de sucesso
     this.router.navigate(['/success']);
   }
 
   onFail(): void {
-    // Navega para a rota de falha
     this.router.navigate(['/fail']);
   }
 
@@ -294,6 +262,5 @@ export class PaymentComponent implements OnInit {
     }
 
     console.error('Erro ao criar subscription no mercado pago');
-    // this.createTransaction();
   }
 }
