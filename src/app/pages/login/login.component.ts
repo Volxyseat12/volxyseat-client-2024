@@ -13,6 +13,7 @@ import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ILogin } from '../../models/SubscriptionModel/ILogin';
+import { ToastService } from 'angular-toastify';
 
 
 
@@ -39,17 +40,10 @@ export class LoginComponent {
     private cookieService: CookieService,
     private loginService: LoginService,
     private transactionService: TransactionService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private _toastService: ToastService
   ) {
     this.cookiesAceitos = this.cookieService.get('aceitou_cookies') === 'true';
-  }
-
-  showSuccess() {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Login realizado com sucesso!',
-    });
   }
 
   public loginRequest: ILogin = {
@@ -73,10 +67,11 @@ export class LoginComponent {
         localStorage.setItem('username', response.name);
         localStorage.setItem('clientId', response.clientId);
         localStorage.setItem('transactionId', this.transactionId);
-        this.showSuccess();
+        this._toastService.success('Login feito com Sucesso!');
         this.router.navigate(['/']);
       },
       error: (error: any) => {
+        this._toastService.error('Falha no Login!');
         console.log('Erro ao fazer login!', error);
       },
     });
