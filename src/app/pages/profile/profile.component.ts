@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   username: string | null = null;
+  email: string | null = null;
   showDropdown: boolean = false;
   isAuthenticated: boolean = false;
 
@@ -45,6 +46,7 @@ export class ProfileComponent implements OnInit {
 
   private checkUserLogin() {
     this.username = localStorage.getItem('username');
+    this.email = localStorage.getItem('email');
     this.isAuthenticated = !!this.username;
   }
 

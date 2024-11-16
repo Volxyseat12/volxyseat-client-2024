@@ -70,7 +70,7 @@ export class PaymentComponent implements OnInit {
 
   fetchPlanDetails(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const subId = localStorage.getItem('subId');
+      const subId = sessionStorage.getItem('subId');
       if (subId) {
         this.subscriptionService.getById(subId).subscribe(
           (plan: ISubscription) => {

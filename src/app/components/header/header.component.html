@@ -13,6 +13,7 @@
           <li>
             <a href="#prices">Preços</a>
             <a href="#about">Sobre</a>
+            <a href="#about">Sobre</a>
           </li>
         </ul>
       </div>
@@ -21,11 +22,12 @@
       <div class="header-login">
         <div class="header-login-cta">
           @if(isAuthenticated){
-            @if(userPlanType){
-            <div class="p-2 rounded-full bg-orange-500 uppercase font-bold text-white">
-              <h1>{{userPlanType}}</h1>
-            </div>
-            }
+          <div
+            class="p-2 rounded-full bg-orange-500 uppercase font-bold text-white"
+          >
+            <h1>{{ userPlanType || 'Sem assinatura'}}</h1>
+          </div>
+
           <div class="header-space"></div>
           <div class="flex items-center space-x-4">
             <div class="relative">
