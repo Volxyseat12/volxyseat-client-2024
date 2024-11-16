@@ -14,91 +14,9 @@ import { TransactionService } from '../../services/transaction.service';
 @Component({
   selector: 'app-payment-success',
   standalone: true,
+  templateUrl: './success.component.html',
   imports: [CommonModule],
   template: `
-    <div
-      class="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-green-100 overflow-hidden"
-    >
-      <div class="w-full max-w-md relative bg-white rounded-lg shadow-xl">
-        <div class="flex flex-col items-center justify-center p-6 text-center">
-          <div class="mb-6 relative" [@scaleIn]="isVisible">
-            <div class="rounded-full bg-green-100 p-3" [@pulse]="isVisible">
-              <div [@drawPath]="isVisible">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  class="text-green-600"
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-            </div>
-
-            <!-- Partículas de confete -->
-            <ng-container *ngIf="showConfetti">
-              <div
-                *ngFor="let particle of particles; let i = index"
-                class="absolute size-2 rounded-full bg-green-400"
-                [@particleAnimation]="{ value: '', params: { delay: i * 100 } }"
-              ></div>
-            </ng-container>
-          </div>
-
-          <!-- Título com ícone de brilho -->
-          <div class="relative" [@fadeInUp]="isVisible">
-            <h2 class="text-3xl font-bold mb-2 text-green-800">Sucesso!</h2>
-            <div class="absolute -right-6 -top-6" [@sparkleRotate]="isVisible">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                class="text-yellow-400"
-              >
-                <path
-                  d="M12 3v3m0 12v3M5.2 5.2l2.1 2.1m9.4 9.4l2.1 2.1M3 12h3m12 0h3M5.2 18.8l2.1-2.1m9.4-9.4l2.1-2.1"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <!-- Mensagem de sucesso -->
-          <p class="text-lg text-green-600 mb-6" [@fadeInUp]="isVisible">
-            Você acabou de adquirir um novo plano.
-          </p>
-
-          <!-- Botão do dashboard -->
-
-          <a href="/profile"><button
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md flex items-center"
-            [@fadeInUp]="isVisible"
-          >
-            Voltar para meu perfil
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              class="ml-2"
-            >
-              <path d="M5 12H19M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          </a>
-        </div>
-      </div>
-    </div>
   `,
   animations: [
     trigger('scaleIn', [

@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
 import { PropertyCategoryMapping } from '../../models/ISubscriptionProperties';
-import { routes } from '../../app.routes';
 import { Router } from '@angular/router';
 
 @Component({
@@ -31,7 +30,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   selectedCategory: string = 'Suporte';
   subscriptionProperties: { [key: string]: boolean } = {};
   isTransitioning: boolean = false;
-  hoveredCard: number | null = null; // For hover control
+  hoveredCard: number | null = null;
 
   categories = [
     { name: 'Suporte' },
@@ -115,10 +114,13 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   }
 
   selectSubscription(subscriptionId: string) {
-    localStorage.setItem('subId', subscriptionId);
+    sessionStorage.setItem('subId', subscriptionId);
     const token = localStorage.getItem('token');
-    if (token) this.router.navigate(['/payment']);
-    else this.router.navigate(['/login']);
+    if (token) {
+      this.router.navigate(['/payment']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   setSubscriptionProperties(subscription: ISubscription): void {

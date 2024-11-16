@@ -1,16 +1,42 @@
-<div class="flex flex-col items-center justify-center h-screen bg-gray-100 animate-pulse">
-  <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInUp">
+<div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 to-emerald-50">
+  <div class="bg-white p-8 rounded-lg shadow-lg transform animate-fadeIn">
+    <!-- Success Icon with Animation -->
     <div class="flex items-center justify-center mb-6">
-      <svg class="w-16 h-16 text-red-500 animate__animated animate__shakeX" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
+      <div class="relative">
+        <!-- Outer ring with pulse effect -->
+        <div class="absolute inset-0 rounded-full animate-ping bg-orange-100"></div>
+        <!-- Success checkmark -->
+        <svg class="w-16 h-16 text-orange-500 relative animate-bounceIn" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            class="animate-drawCheck"
+          ></path>
+        </svg>
+      </div>
     </div>
-    <h2 class="text-2xl font-bold text-gray-800 mb-2 animate__animated animate__fadeInDown">Payment Failed</h2>
-    <p class="text-gray-600 mb-6 animate__animated animate__fadeInUp">There was an issue processing your payment. Please try again.</p>
-    <div class="flex justify-center animate__animated animate__fadeInUp">
-      <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
-        Try Again
-      </button>
+
+    <!-- Success Message with Fade In -->
+    <div class="text-center space-y-3 animate-slideUp">
+      <h2 class="text-2xl font-bold text-gray-800">Pagamento Aprovado!</h2>
+      <p class="text-gray-600">Você finalizou sua compra com <strong>SUCESSO!</strong></p>
+      
+    </div>
+
+    <!-- Buttons with Hover Effects -->
+    <div class="mt-8 space-y-4 gap-2 flex flex-col">
+      <a href="/profile">
+        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-md transform transition-all">
+          Ver Perfil
+        </button>
+      </a>
+      <a href="/">
+        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-md transition-all duration-300 animate-fadeIn">
+          Voltar para Home
+        </button>
+      </a>
     </div>
   </div>
 </div>
