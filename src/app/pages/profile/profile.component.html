@@ -35,8 +35,7 @@
 
           <div *ngIf="showDropdown"
             class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
-            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
-              aria-label="Ver perfil">Profile</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" aria-label="Ver perfil">Profile</a>
             <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()"
               aria-label="Sair">Log out</a>
           </div>
@@ -50,11 +49,13 @@
         <form class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-600" for="name">Nome</label>
-            <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="name" type="text" value={{username}} [disabled]="true"/>
+            <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="name" type="text" value={{username}}
+              [disabled]="true" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-600" for="email">Email</label>
-            <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="email" type="email" value={{email}} [disabled]="true"/>
+            <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="email" type="email" value={{email}}
+              [disabled]="true" />
           </div>
           <!-- <button
             class="px-4 py-2 uppercase font-bold text-white bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md transition"

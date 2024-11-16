@@ -9,20 +9,20 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './cookiepopup.component.css',
 })
 export class CookiepopupComponent {
-  cookiesAceitos: boolean;
+  showCookies: boolean = true;
 
   constructor(private cookieService: CookieService) {
-    this.cookiesAceitos =
-      this.cookieService.get('aceitou_cookies_dev') === 'true';
   }
 
-  aceitarCookies() {
-    this.cookieService.set('aceitou_cookies', 'true', 1);
-    this.cookiesAceitos = true;
+  acceptCookies() {
+    this.cookieService.set('cookies_accepted', 'true', 1);
+    this.showCookies = false;
+    localStorage.setItem('cookies', 'true')
   }
 
-  recusarCookies() {
-    this.cookieService.set('aceitou_cookies', 'false', 1);
-    this.cookiesAceitos = false;
+  declineCookies() {
+    this.cookieService.set('cookies_declined', 'false', 1);
+    this.showCookies = false;
+    localStorage.setItem('cookies', 'false')
   }
 }
