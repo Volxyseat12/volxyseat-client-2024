@@ -24,14 +24,6 @@ import { SuccessComponent } from '../../components/success/success.component';
 import { FailComponent } from '../../components/fail/fail.component';
 import { Router } from '@angular/router';
 import { IPreApprovalResponse } from '../../models/MercadoPago/IPreApprovalResponse';
-
-interface Item {
-  description: string;
-  qty: number;
-  price: number;
-  totalAmount: number;
-}
-
 declare var MercadoPago: any;
 
 @Component({
@@ -60,7 +52,6 @@ export class PaymentComponent implements OnInit {
   }
   constructor(
     private subscriptionService: SubscriptionService,
-    private transactionService: TransactionService,
     private mercadoPagoService: MercadoPagoService,
     private router: Router
   ) {}
@@ -175,29 +166,6 @@ export class PaymentComponent implements OnInit {
           console.log('Fetching resource:', resource),
       },
     });
-  }
-
-  createTransaction() {
-    const subId = localStorage.getItem('subId');
-    const clientId = localStorage.getItem('clientId');
-    console.log(`${subId}\n${clientId}`);
-    if (subId && clientId && this.plan?.mercadoPagoPlanId) {
-      const transaction: ITransaction = {
-        clientId: clientId,
-        subscriptionId: subId,
-        mercadoPagoSubscriptionId: this.plan?.mercadoPagoPlanId,
-      };
-      this.transactionService.post(transaction).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.onSuccess();
-        },
-        error: (err) => {
-          console.log(err.message);
-          this.onFail();
-        },
-      });
-    }
   }
 
   onSuccess(): void {

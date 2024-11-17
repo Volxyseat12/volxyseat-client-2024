@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadSubscriptionFromStorage() {
-    const subId = localStorage.getItem('subId');
+    const subId = sessionStorage.getItem('subId');
 
     if (subId) {
       this.loadSubscription(subId);

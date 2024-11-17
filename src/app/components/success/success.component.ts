@@ -107,7 +107,7 @@ export class SuccessComponent implements OnInit {
   }
 
   createTransaction() {
-    const subId = localStorage.getItem('subId');
+    const subId = sessionStorage.getItem('subId');
     const clientId = localStorage.getItem('clientId');
     const preApprovalId = localStorage.getItem('preApprovalId');
     console.log(`${subId}\n${clientId}\n${preApprovalId}`);
