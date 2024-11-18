@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
+import { DashboardComponent } from '../../components/dashboard/dashboard.component';
+import { HeaderComponent } from "../../components/header/header.component";
 
 interface ISubscription {
   id: string;
@@ -25,8 +27,10 @@ interface ISubscription {
     MatButtonModule,
     MatInputModule,
     MatTableModule,
-    MatIconModule
-  ]
+    MatIconModule,
+    DashboardComponent,
+    HeaderComponent
+]
 })
 export class AdminComponent {
   SubscriptionEnum = SubscriptionEnum;

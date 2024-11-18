@@ -1,9 +1,4 @@
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +19,7 @@ import { SuccessComponent } from '../../components/success/success.component';
 import { FailComponent } from '../../components/fail/fail.component';
 import { Router } from '@angular/router';
 import { IPreApprovalResponse } from '../../models/MercadoPago/IPreApprovalResponse';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 declare var MercadoPago: any;
 
 @Component({
@@ -43,13 +39,28 @@ declare var MercadoPago: any;
   standalone: true,
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('200ms', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms', style({ opacity: 0 }))
+      ])
+    ])
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PaymentComponent implements OnInit {
+  isProcessing = false;
+  isComplete = false;
+  
   async ngOnInit(): Promise<void> {
     await this.fetchPlanDetails();
     this.loadMercadoPagoScript();
   }
+
   constructor(
     private subscriptionService: SubscriptionService,
     private mercadoPagoService: MercadoPagoService,
@@ -197,6 +208,7 @@ export class PaymentComponent implements OnInit {
 
   processPayment(event: Event): void {
     event.preventDefault();
+    this.isProcessing = true;
 
     const formData = this.cardForm.getCardFormData();
     if (!formData) {
@@ -226,6 +238,15 @@ export class PaymentComponent implements OnInit {
       };
       console.log(createSubscription);
       this.createMercadoPagoSubscription(createSubscription);
+
+      setTimeout(() => {
+        this.isProcessing = false;
+        this.isComplete = true;
+
+        setTimeout(() => {
+          this.isComplete = false;
+        }, 2000);
+      }, 2000);
       return;
     }
 

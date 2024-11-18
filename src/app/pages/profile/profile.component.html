@@ -1,32 +1,13 @@
+<app-header></app-header>
 <div class="flex h-screen bg-gray-100">
-  <aside class="w-64 bg-white p-4 shadow-lg">
-    <div class="p-4 flex justify-center">
-      <a href="/" aria-label="Voltar para a página inicial">
-        <img src="../public/l2.png" alt="Logo" />
-      </a>
-    </div>
-    <nav class="space-y-2">
-      <a href="/profile"
-        class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition"
-        aria-label="Perfil do Usuário">
-        <i class="pi pi-home text-gray-700"></i>
-        <span>Perfil</span>
-      </a>
-      <a href="/admin"
-        class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition"
-        aria-label="Administração">
-        <i class="pi pi-cog text-gray-700"></i>
-        <span>Admin</span>
-      </a>
-    </nav>
-  </aside>
+<app-dashboard></app-dashboard>
 
   <main class="flex-1 p-8">
     <div class="mb-8 flex items-center justify-between">
       <h2 class="text-3xl font-bold text-orange-500 uppercase">Perfil do Usuário</h2>
       <div class="flex items-center space-x-4">
         <div class="relative">
-          <button (click)="toggleDropdown()"
+          <!-- <button (click)="toggleDropdown()"
             class="flex items-center rounded-lg px-4 py-2 border border-gray-300 hover:bg-gray-100 transition"
             aria-label="Abrir menu de usuário">
             <span class="mr-2 text-gray-700">Olá, {{ username }}</span>
@@ -38,7 +19,7 @@
             <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" aria-label="Ver perfil">Profile</a>
             <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition" (click)="logout()"
               aria-label="Sair">Log out</a>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

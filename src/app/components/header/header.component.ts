@@ -1,6 +1,5 @@
 import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
-import { Component, TemplateRef } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { Component } from '@angular/core';
 import { LogOutService } from '../../services/log-out.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
@@ -73,7 +72,7 @@ export class HeaderComponent {
         localStorage.clear();
         this.username = null;
         this.isAuthenticated = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       },
       error: (error: any) => {
         console.error('Erro ao fazer logout:', error);

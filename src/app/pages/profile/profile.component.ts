@@ -5,13 +5,15 @@ import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
 import { SubscriptionService } from '../../services/subscription.service';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from "../../components/header/header.component";
+import { DashboardComponent } from "../../components/dashboard/dashboard.component";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, HeaderComponent, DashboardComponent]
 })
 export class ProfileComponent implements OnInit {
   subscription: ISubscription | null = null;
