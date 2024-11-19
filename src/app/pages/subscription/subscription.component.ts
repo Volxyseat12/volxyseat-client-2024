@@ -114,7 +114,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   }
 
   selectSubscription(subscriptionId: string) {
-    sessionStorage.setItem('subId', subscriptionId);
+    localStorage.setItem('subId', subscriptionId);
     const token = localStorage.getItem('token');
     if (token) {
       this.router.navigate(['/payment']);

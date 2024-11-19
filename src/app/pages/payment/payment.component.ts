@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { SubscriptionService } from '../../services/subscription.service';
-import { TransactionService } from '../../services/transaction.service';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
 import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
@@ -20,6 +19,8 @@ import { FailComponent } from '../../components/fail/fail.component';
 import { Router } from '@angular/router';
 import { IPreApprovalResponse } from '../../models/MercadoPago/IPreApprovalResponse';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { TransactionService } from '../../services/transaction.service';
+import { ICreateTransactionResponse } from '../../models/ICreateTransactionResponse';
 declare var MercadoPago: any;
 
 @Component({
@@ -55,7 +56,7 @@ declare var MercadoPago: any;
 export class PaymentComponent implements OnInit {
   isProcessing = false;
   isComplete = false;
-  
+
   async ngOnInit(): Promise<void> {
     await this.fetchPlanDetails();
     this.loadMercadoPagoScript();
@@ -64,15 +65,16 @@ export class PaymentComponent implements OnInit {
   constructor(
     private subscriptionService: SubscriptionService,
     private mercadoPagoService: MercadoPagoService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private transactionService: TransactionService
+  ) { this.createTransaction(); }
 
   private cardForm: any;
   plan: ISubscription | undefined;
 
   fetchPlanDetails(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const subId = sessionStorage.getItem('subId');
+      const subId = localStorage.getItem('subId');
       if (subId) {
         this.subscriptionService.getById(subId).subscribe(
           (plan: ISubscription) => {
@@ -80,13 +82,11 @@ export class PaymentComponent implements OnInit {
             resolve();
           },
           (error: any) => {
-            console.error('Error fetching plan details:', error);
             reject(error);
           }
         );
       } else {
         console.warn('No subscription ID found in localStorage.');
-        reject(new Error('No subscription ID found in localStorage.'));
       }
     });
   }
@@ -103,6 +103,29 @@ export class PaymentComponent implements OnInit {
         return 'Personalizado';
       default:
         return 'Sem Plano';
+    }
+  }
+
+  createTransaction() {
+    const subId = localStorage.getItem('subId');
+    const clientId = localStorage.getItem('clientId');
+    const preApprovalId = localStorage.getItem('preApprovalId');
+    if (subId && clientId && preApprovalId) {
+      const transaction: ITransaction = {
+        clientId: clientId,
+        subscriptionId: subId,
+        mercadoPagoSubscriptionId: preApprovalId,
+      };
+  
+      this.transactionService.post(transaction).subscribe({
+        next: (res: ICreateTransactionResponse) => {
+          console.log(res);
+          localStorage.setItem('transactionId', res.transactionId);
+        },
+        error: (err) => {
+          console.log(err.message);
+        },
+      });
     }
   }
 
@@ -189,33 +212,34 @@ export class PaymentComponent implements OnInit {
 
   createMercadoPagoSubscription(
     createMercadoPagoSubscriptionModel: ICreateSubscription
-  ): void {
-    this.mercadoPagoService
+  ): Promise<IPreApprovalResponse> {
+    return this.mercadoPagoService
       .createMercadoPagoSubscription(createMercadoPagoSubscriptionModel)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          let preApproval = <IPreApprovalResponse>res;
-          localStorage.setItem('preApprovalId', preApproval.id);
-          this.onSuccess();
-        },
-        error: (err) => {
-          console.error(err.message);
-          this.onFail();
-        },
+      .toPromise()
+      .then((res) => {
+        console.log(res);
+        let preApproval = <IPreApprovalResponse>res;
+        localStorage.setItem('preApprovalId', preApproval.id);
+        this.onSuccess();
+        return preApproval;
+      })
+      .catch((err) => {
+        console.error(err.message);
+        this.onFail();
+        throw err;
       });
   }
 
   processPayment(event: Event): void {
     event.preventDefault();
     this.isProcessing = true;
-
+  
     const formData = this.cardForm.getCardFormData();
     if (!formData) {
       console.error('Error retrieving form data.');
       return;
     }
-
+  
     const {
       paymentMethodId: payment_method_id,
       issuerId: issuer_id,
@@ -223,11 +247,12 @@ export class PaymentComponent implements OnInit {
       amount,
       token,
     } = formData;
-
+  
     if (this.plan) {
       const todayDate = new Date();
       const { mercadoPagoPlanId, type, price } = this.plan;
       console.log(mercadoPagoPlanId);
+  
       const createSubscription: ICreateSubscription = {
         preapproval_plan_id: mercadoPagoPlanId,
         reason: this.subscriptionEnumToString(type),
@@ -236,20 +261,32 @@ export class PaymentComponent implements OnInit {
         billing_day: todayDate.getDate(),
         cardTokenId: token,
       };
-      console.log(createSubscription);
-      this.createMercadoPagoSubscription(createSubscription);
-
+      this.createMercadoPagoSubscription(createSubscription)
+        .then((response) => {
+          const transactionId = response.id;
+          
+          if (transactionId) {
+            localStorage.setItem('transactionId', transactionId);
+            console.log('Transaction ID set:', transactionId);
+          } else {
+            console.error('Transaction ID não encontrado.');
+          }
+        })
+        .catch((error) => {
+          console.error('Erro ao processar pagamento:', error);
+        });
+  
       setTimeout(() => {
         this.isProcessing = false;
         this.isComplete = true;
-
+  
         setTimeout(() => {
           this.isComplete = false;
         }, 2000);
       }, 2000);
       return;
     }
-
+  
     console.error('Erro ao criar subscription no mercado pago');
-  }
+  }  
 }

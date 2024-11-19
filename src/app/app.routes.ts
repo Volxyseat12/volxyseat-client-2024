@@ -9,6 +9,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { SuccessComponent } from './components/success/success.component';
 import { FailComponent } from './components/fail/fail.component';
 import { AuthGuard } from './auth/auth.guard';
+import { TemplatesComponent } from './pages/templates/templates.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
   { path: 'success', component: SuccessComponent },
-  { path: 'fail', component: FailComponent }
+  { path: 'fail', component: FailComponent },
+  { path: 'templates', component: TemplatesComponent, canActivate: [AuthGuard] }
 ];

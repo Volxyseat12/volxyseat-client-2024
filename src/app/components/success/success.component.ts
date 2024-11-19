@@ -84,8 +84,7 @@ import { TransactionService } from '../../services/transaction.service';
   ],
 })
 export class SuccessComponent implements OnInit {
-  constructor(private transactionService: TransactionService) {
-    this.createTransaction();
+  constructor() {
   }
 
   isVisible = false;
@@ -104,27 +103,5 @@ export class SuccessComponent implements OnInit {
         this.showConfetti = true;
       }, 1000);
     });
-  }
-
-  createTransaction() {
-    const subId = sessionStorage.getItem('subId');
-    const clientId = localStorage.getItem('clientId');
-    const preApprovalId = localStorage.getItem('preApprovalId');
-    console.log(`${subId}\n${clientId}\n${preApprovalId}`);
-    if (subId && clientId && preApprovalId) {
-      const transaction: ITransaction = {
-        clientId: clientId,
-        subscriptionId: subId,
-        mercadoPagoSubscriptionId: preApprovalId,
-      };
-      this.transactionService.post(transaction).subscribe({
-        next: (res) => {
-          console.log(res);
-        },
-        error: (err) => {
-          console.log(err.message);
-        },
-      });
-    }
   }
 }

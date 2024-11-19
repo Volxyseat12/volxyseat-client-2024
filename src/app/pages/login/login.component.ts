@@ -34,7 +34,6 @@ import { ToastService } from 'angular-toastify';
 })
 export class LoginComponent {
   cookiesAceitos: boolean;
-  transactionId!: string;
   constructor(
     private router: Router,
     private cookieService: CookieService,
@@ -55,9 +54,6 @@ export class LoginComponent {
     this.loginService.post(this.loginRequest).subscribe({
       next: (response: any) => {
         this.transactionService.getById(response.clientId).subscribe({
-          next: (transactionResponse: any) => {
-            this.transactionId = transactionResponse.id;
-          },
           error: (error: any) => {
             console.log('Erro ao obter transação!', error);
           },
@@ -66,7 +62,6 @@ export class LoginComponent {
         localStorage.setItem('email', response.email);
         localStorage.setItem('username', response.name);
         localStorage.setItem('clientId', response.clientId);
-        localStorage.setItem('transactionId', this.transactionId);
         this._toastService.success('Login feito com Sucesso!');
         this.router.navigate(['/']);
       },
