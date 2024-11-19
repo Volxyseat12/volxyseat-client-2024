@@ -7,13 +7,14 @@ import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../../components/header/header.component";
 import { DashboardComponent } from "../../components/dashboard/dashboard.component";
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   standalone: true,
-  imports: [CommonModule, HeaderComponent, DashboardComponent]
+  imports: [CommonModule, HeaderComponent, DashboardComponent, FooterComponent]
 })
 export class ProfileComponent implements OnInit {
   subscription: ISubscription | null = null;
@@ -53,7 +54,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadSubscriptionFromStorage() {
-    const subId = sessionStorage.getItem('subId');
+    const subId = localStorage.getItem('subId');
 
     if (subId) {
       this.loadSubscription(subId);
@@ -69,7 +70,11 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err: any) => {
-        this.error = err;
+        if (err && err.message) {
+          this.error = err.message;
+        } else {
+          this.error = 'Nenhum plano adquirido ainda';
+        }
         this.subscription = null;
         this.isLoading = false;
       }

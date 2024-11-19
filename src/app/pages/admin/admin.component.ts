@@ -9,6 +9,7 @@ import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { HeaderComponent } from "../../components/header/header.component";
+import { FooterComponent } from "../../components/footer/footer.component";
 
 interface ISubscription {
   id: string;
@@ -29,7 +30,8 @@ interface ISubscription {
     MatTableModule,
     MatIconModule,
     DashboardComponent,
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
 ]
 })
 export class AdminComponent {
