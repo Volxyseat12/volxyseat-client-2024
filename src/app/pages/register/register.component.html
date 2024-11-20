@@ -1,14 +1,10 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 h-screen w-full overflow-hidden">
-  <!-- Register Context -->
   <div class="flex flex-col justify-center items-center bg-white bg-opacity-90 px-6 py-12 lg:px-20">
-    <!-- Form Container -->
     <div class="w-full max-w-md space-y-6">
-      <!-- Logo -->
       <div class="flex justify-center">
         <img src="../public/l2.png" alt="Logo da Sua Marca" class="w-20 h-20" />
       </div>
 
-      <!-- Title -->
       <div class="text-center">
         <h1 class="text-2xl font-bold text-gray-800 leading-snug">
           Construindo o Futuro Online. <br />
@@ -16,7 +12,6 @@
         </h1>
       </div>
 
-      <!-- Form Fields -->
       <form [formGroup]="registerForm" (ngSubmit)="registerAndLogin()" class="space-y-4">
         <div>
           <label for="companyName" class="block text-sm font-medium text-gray-700">
@@ -71,7 +66,6 @@
           }
         </div>
 
-        <!-- Call to Action -->
         <div class="flex flex-col items-center space-y-2">
           <button
             type="submit"
@@ -89,7 +83,6 @@
     </div>
   </div>
 
-  <!-- Register Banner -->
   <div class="hidden lg:flex items-center justify-center bg-gray-100 relative">
     <img src="../public/br2.png" alt="Banner de register" class="object-cover w-full h-full" />
   </div>
