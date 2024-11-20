@@ -67,7 +67,6 @@ export class LoginComponent {
       },
       error: (error: any) => {
         this._toastService.error('Falha no Login!');
-        console.log('Erro ao fazer login!', error);
       },
     });
   }
