@@ -13,7 +13,11 @@ export class TransactionService {
   constructor(private http: HttpClient) {}
 
   post(transaction: ITransaction) {
-    return this.http.post(`${this.apiUrl}`, transaction);
+    const endpointUrl = VolxyseatEndpoints.endpoints.createTransaction(
+      this.apiUrl
+    );
+    console.log(endpointUrl);
+    return this.http.post(`${endpointUrl}`, transaction);
   }
 
   getById(id: any) {

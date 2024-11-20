@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,7 @@ export class ProfileComponent {
   isAuthenticated: boolean = false;
 
 
-  constructor(private logOutService: LogOutService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     this.checkUserLogin();
   }
 
@@ -42,7 +42,7 @@ export class ProfileComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe(
+    this.authService.logout().subscribe(
       () => {
         localStorage.clear();
         this.username = null;

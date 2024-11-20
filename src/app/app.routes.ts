@@ -7,6 +7,8 @@ import { SubscriptionComponent } from './pages/subscription/subscription.compone
 import { PaymentComponent } from './pages/payment/payment.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileSubscriptionsComponent } from './pages/profile-subscriptions/profile-subscriptions.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { AuthGuard } from './services/auth/auth.guard';
 
 export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
@@ -14,7 +16,8 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'subscription', component: SubscriptionComponent },
     { path: 'payment', component: PaymentComponent },
-    { path: 'profile', component: ProfileComponent },
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]  },
     { path: 'profile-subscriptions', component: ProfileSubscriptionsComponent },
+    { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
 
 ];

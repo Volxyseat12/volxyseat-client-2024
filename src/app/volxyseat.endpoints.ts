@@ -1,3 +1,4 @@
+import { RegisterComponent } from './pages/register/register.component';
 export interface Endpoints {
   getSubscriptions: (apiUrl: string) => string;
   getSubscriptionDetails: (apiUrl: string, id: string) => string;
@@ -6,7 +7,10 @@ export interface Endpoints {
   getSubscriptionById: (apiUrl: string, id: string) => string;
 
   getTransactionById: (apiUrl: string, id: string) => string;
+  createTransaction: (apiUrl: string) => string;
 
+  register: (apiUrl: string) => string;
+  login: (apiUrl: string) => string;
   logout: (apiUrl: string) => string;
 }
 
@@ -26,7 +30,10 @@ export namespace VolxyseatEndpoints {
 
     getTransactionById: (apiUrl: string, id: string) =>
       `${apiUrl}${base}/Transaction/${id}`,
+    createTransaction: (apiUrl: string) => `${apiUrl}${base}/Transaction/`,
 
+    register: (apiUrl: string): string => `${apiUrl}${base}/User/register`,
+    login: (apiUrl: string): string => `${apiUrl}${base}/User/login`,
     logout: (apiUrl: string): string => `${apiUrl}${base}/User/logout`,
   };
 }

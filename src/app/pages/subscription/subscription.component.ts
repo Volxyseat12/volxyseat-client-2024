@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SubscriptionService } from '../../services/subscription.service';
-
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
@@ -32,12 +31,20 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   selectedCategory: string = 'Suporte';
   subscriptionProperties: { [key: string]: boolean } = {};
   isTransitioning: boolean = false;
+  hoveredCard: number | null = null; // For hover control
 
   categories = [
     { name: 'Suporte' },
     { name: 'Documentação' },
     { name: 'Funcionalidades' },
     { name: 'Suporte Prioritário' },
+  ];
+
+  features = [
+    { title: 'Recursos Premium', description: 'Acesso a todos os recursos avançados da plataforma' },
+    { title: 'Segurança Garantida', description: 'Proteção total dos seus dados e informações' },
+    { title: 'Alta Performance', description: 'Velocidade e eficiência em todas as operações' },
+    { title: 'Suporte 24/7', description: 'Assistência técnica sempre disponível!' },
   ];
 
   propertyCategoryMapping: PropertyCategoryMapping = {
@@ -74,13 +81,13 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   subscriptionEnumToString(enumValue: number): string {
     switch (enumValue) {
       case 0:
-        return 'Basic';
+        return 'Básico';
       case 1:
-        return 'Medium';
+        return 'Médio';
       case 2:
-        return 'Advanced';
+        return 'Avançado';
       case 3:
-        return 'Personalized';
+        return 'Personalizado';
       default:
         return 'Unknown';
     }
@@ -90,7 +97,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._service
-      .getSubscriptions()
+      .getAll()
       .pipe(takeUntil(this._subscription))
       .subscribe((response: ISubscription[]) => {
         this.subscriptions = response;
@@ -109,7 +116,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   selectSubscription(subscriptionId: string) {
     localStorage.setItem('subId', subscriptionId);
-    this.router.navigate(['/payment']);
+    const token = localStorage.getItem('token');
+    if (token) this.router.navigate(['/payment']);
+    else this.router.navigate(['/login']);
   }
 
   setSubscriptionProperties(subscription: ISubscription): void {
@@ -144,5 +153,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._subscription.next();
     this._subscription.complete();
+  }
+
+  setHoveredCard(index: number | null) {
+    this.hoveredCard = index;
   }
 }

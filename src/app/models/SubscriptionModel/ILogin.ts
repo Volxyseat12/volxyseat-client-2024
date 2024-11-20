@@ -1,4 +1,4 @@
 export class ILogin {
-    userName!: string;
+    email!: string;
     password!: string;
 }

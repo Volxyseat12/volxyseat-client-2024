@@ -1,29 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterComponent } from './register.component';
-import { RegisterService } from '../../services/register.service';
-import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { IRegister } from '../../models/SubscriptionModel/IRegister';
+import { AuthService } from '../../services/auth/auth.service';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
-  let mockRegisterService: jasmine.SpyObj<RegisterService>;
-  let mockLoginService: jasmine.SpyObj<LoginService>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockRegisterService = jasmine.createSpyObj('RegisterService', ['post']);
-    mockLoginService = jasmine.createSpyObj('LoginService', ['']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['register']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
       providers: [
-        { provide: RegisterService, useValue: mockRegisterService },
-        { provide: LoginService, useValue: mockLoginService },
+        { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter },
       ],
     }).compileComponents();
@@ -39,7 +35,7 @@ describe('RegisterComponent', () => {
 
   it('should call registerService.post and navigate on successful registration', () => {
     const mockReponse = { success: true };
-    mockRegisterService.post.and.returnValue(of(mockReponse));
+    mockAuthService.register.and.returnValue(of(mockReponse));
 
     component.newRegister = {
       name: 'Volxyseat',
@@ -47,9 +43,9 @@ describe('RegisterComponent', () => {
       password: 'password@1123',
     };
 
-    component.registerAndLogin();
+    component.register();
 
-      expect(mockRegisterService.post).toHaveBeenCalledWith(
+      expect(mockAuthService.register).toHaveBeenCalledWith(
         jasmine.objectContaining({
           name: 'Volxyseat',
           email: 'Volxyseat@gmail.com',

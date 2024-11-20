@@ -1,11 +1,14 @@
+import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
 import { Component, TemplateRef } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { LogOutService } from '../../services/log-out.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
+import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
+import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -21,9 +24,12 @@ export class HeaderComponent {
   isWideScreen = window.innerWidth > 930;
   teste: string = '';
   showDropdown: boolean = false;
+  userPlanType: string | null = null;
+  userPlan: ISubscription | null = null;
+  userTransaction: ITransaction | null = null;
 
   constructor(
-    private logOutService: LogOutService,
+    private authService: AuthService,
     private tranService: TransactionService,
     private subService: SubscriptionService,
     private router: Router
@@ -31,7 +37,23 @@ export class HeaderComponent {
     this.checkUserLogin();
   }
 
+  subscriptionEnumToString(enumValue: SubscriptionEnum): string {
+    switch (enumValue) {
+      case 0:
+        return 'Básico';
+      case 1:
+        return 'Médio';
+      case 2:
+        return 'Avançado';
+      case 3:
+        return 'Personalizado';
+      default:
+        return 'Sem Plano';
+    }
+  }
+
   checkUserLogin() {
+    this.getTransaction();
     const token = localStorage.getItem('token');
     this.username = localStorage.getItem('username');
     this.isAuthenticated = !!token;
@@ -46,7 +68,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe({
+    this.authService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.username = null;
@@ -55,12 +77,20 @@ export class HeaderComponent {
       },
       error: (error: any) => {
         console.error('Erro ao fazer logout:', error);
-      }
+      },
     });
   }
 
-  getTransaction(): Observable<any> {
-    return this.tranService.getById(localStorage.getItem('transactionId'));
+  getTransaction(): void {
+    this.tranService.getById(localStorage.getItem('clientId')).subscribe({
+      next: (res) => {
+        this.userTransaction = <ITransaction>res;
+        this.getSubscriptionById(<string>this.userTransaction?.subscriptionId);
+      },
+      error: (error: any) => {
+        console.log(error.message);
+      },
+    });
   }
 
   // getSubscriptionId() {
@@ -82,7 +112,15 @@ export class HeaderComponent {
   //     );
   // }
 
-  getSubscriptionById(id: string): Observable<any> {
-    return this.subService.getById(id);
+  getSubscriptionById(id: string): void {
+    this.subService.getById(id).subscribe({
+      next: (res: any) => {
+        this.userPlan = res;
+        this.userPlanType = this.subscriptionEnumToString(
+          <SubscriptionEnum>this.userPlan?.type
+        );
+        console.log(this.userPlan);
+      },
+    });
   }
 }

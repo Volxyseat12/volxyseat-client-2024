@@ -2,7 +2,9 @@
   <div class="login-context">
     <div class="login-forms">
       <div class="login-logo">
-        <img src="/l2.png" alt="Logo da Sua Marca" />
+        <a href="/">
+          <img src="/l2.png" alt="Logo" />
+        </a>
       </div>
       <div class="login-title">
         <h1>Acesse para ter acesso ao seus benefícios.</h1>
@@ -15,7 +17,7 @@
           name="email"
           id="email"
           required
-          [(ngModel)]="loginRequest.userName"
+          [(ngModel)]="loginRequest.email"
         />
       </div>
 
@@ -33,9 +35,8 @@
       <div class="login-cta">
         <div class="login-login-cta">
           <button type="button" class="cta" (click)="login()">
-            INICIAR SESSÃO
+            LOGIN
           </button>
-          <p-toast />
 
           <div class="login-label login">
             <span
@@ -51,5 +52,4 @@
   <div class="login-banner">
     <img src="/bl2.png" alt="Banner de Login" />
   </div>
-  <app-cookiepopup></app-cookiepopup>
 </div>
