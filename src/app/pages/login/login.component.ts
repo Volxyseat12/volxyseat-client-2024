@@ -2,14 +2,13 @@ import { ButtonModule } from 'primeng/button';
 import { TransactionService } from './../../services/transaction.service';
 import { Component } from '@angular/core';
 
-import { LoginService } from '../../services/login.service';
-
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RippleModule } from 'primeng/ripple';
 import { CommonModule } from '@angular/common';
 import { ILogin } from '../../models/SubscriptionModel/ILogin';
 import { ToastService } from 'angular-toastify';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -29,19 +28,19 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private loginService: LoginService,
+    private authService: AuthService,
     private transactionService: TransactionService,
     private _toastService: ToastService
   ) {
   }
 
   public loginRequest: ILogin = {
-    userName: '',
+    email: '',
     password: '',
   };
 
   login() {
-    this.loginService.post(this.loginRequest).subscribe({
+    this.authService.login(this.loginRequest).subscribe({
       next: (response: any) => {
         this.transactionService.getById(response.clientId).subscribe({
           next: (transactionResponse: any) => {

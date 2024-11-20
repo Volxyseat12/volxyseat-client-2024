@@ -12,4 +12,5 @@ export interface ISubscription {
   createdOn: Date;
   updatedOn: Date;
   subscriptionProperties: ISubscriptionProperties;
+  mercadoPagoPlanId: string;
 }

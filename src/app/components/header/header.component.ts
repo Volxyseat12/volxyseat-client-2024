@@ -1,7 +1,6 @@
 import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
 import { Component, TemplateRef } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { LogOutService } from '../../services/log-out.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
@@ -9,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -29,7 +29,7 @@ export class HeaderComponent {
   userTransaction: ITransaction | null = null;
 
   constructor(
-    private logOutService: LogOutService,
+    private authService: AuthService,
     private tranService: TransactionService,
     private subService: SubscriptionService,
     private router: Router
@@ -68,7 +68,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe({
+    this.authService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.username = null;

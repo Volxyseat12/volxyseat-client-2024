@@ -41,43 +41,55 @@
           </div>
 
           <div class="grid grid-cols-1 gap-6">
-              <div>
-                  <div class="bg-white rounded-lg shadow p-6">
-                      <h2 class="text-lg font-semibold mb-4">EDITAR PLANO</h2>
-                      <div class="space-y-4">
-                          <div>
-                              <label class="text-sm text-gray-600">Nome do Plano</label>
-                              <input class="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2"
-                                  placeholder="Nome do Plano" />
-                          </div>
-                          <div>
-                              <label class="text-sm text-gray-600">Preço</label>
-                              <input type="number" class="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2"
-                                  placeholder="0.00" />
-                          </div>
-
-                          <!-- Custom Dropdown -->
-                          <div class="relative">
-                              <label class="text-sm text-gray-600">Tipo</label>
-                              <div (click)="toggleTypeDropdown()"
-                                  class="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer flex justify-between items-center">
-                                  <span>{{ selectedType ? subscriptionEnumToString(selectedType) : 'Selecione o tipo'
-                                      }}</span>
-                                  <i class="pi pi-chevron-down text-gray-600"></i>
-                              </div>
-                              <div *ngIf="showTypeDropdown"
-                                  class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-2 shadow-lg">
-                                  <div *ngFor="let type of subscriptionTypes" (click)="selectType(type)"
-                                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                      {{ subscriptionEnumToString(type) }}
-                                  </div>
-                              </div>
-                          </div>
-
-                          <button class="bg-[#F97316] hover:bg-[#EA580C] w-full mt-4 text-white py-2 rounded-lg">SALVAR</button>
+            <form [formGroup]="subscriptionForm">
+              <div class="bg-white rounded-lg shadow p-6">
+                  <h2 class="text-lg font-semibold mb-4">EDITAR PLANO {{ subscriptionEnumToString(subscription.type).toUpperCase() }}</h2>
+                  <div class="space-y-4">
+                      <div>
+                          <label class="text-sm text-gray-600">Nome do Plano</label>
+                          <input class="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2" formControlName="description" placeholder="Nome do Plano" />
                       </div>
+                      <div>
+                          <label class="text-sm text-gray-600">Preço</label>
+                          <input type="number" class="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2" formControlName="price" placeholder="0.00" />
+                      </div>
+
+                      <div class="relative">
+                          <label class="text-sm text-gray-600">Tipo</label>
+                          <div formControlName="type" (click)="toggleTypeDropdown()" class="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer flex justify-between items-center">
+                              <span>{{ subscriptionEnumToString(selectedType) }}</span>
+                              <i class="pi pi-chevron-down text-gray-600"></i>
+                          </div>
+                          <div *ngIf="showTypeDropdown" class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-2 shadow-lg">
+                              <div *ngFor="let type of subscriptionTypes" (click)="selectType(type)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  {{ subscriptionEnumToString(type) }}
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="relative">
+                          <label class="text-sm text-gray-600">Status</label>
+                          <div formControlName="status" (click)="toggleStatusDropdown()" class="w-full border border-gray-300 rounded-lg px-4 py-2 cursor-pointer flex justify-between items-center">
+                              <span>{{ selectedStatus ? subscriptionStatusToString(selectedStatus) : 'Selecione o status' }}</span>
+                              <i class="pi pi-chevron-down text-gray-600"></i>
+                          </div>
+                          <div *ngIf="showStatusDropdown" class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-2 shadow-lg">
+                              <div *ngFor="let status of subscriptionStatus" (click)="selectStatus(status)" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                  {{ subscriptionStatusToString(status) }}
+                              </div>
+                          </div>
+                      </div>
+
+                      <div>
+                          <label class="text-sm text-gray-600">ID do Plano Mercado Pago</label>
+                          <input class="mt-1 w-full border border-gray-300 rounded-lg px-4 py-2" formControlName="mercadoPagoPlanId" placeholder="ID do Mercado Pago" />
+                      </div>
+
+                      <button (click)="updateSubscription(subscription.id)" class="bg-[#F97316] hover:bg-[#EA580C] w-full mt-4 text-white py-2 rounded-lg">SALVAR</button>
                   </div>
               </div>
+          </form>
+
 
               <div>
                   <div class="bg-white rounded-lg shadow p-6">
@@ -101,7 +113,7 @@
                                   <td class="px-6 py-4 text-sm text-gray-700">{{ subscription.description }}</td>
                                   <td class="px-6 py-4 text-sm text-gray-700">{{ subscription.price | currency }}</td>
                                   <td class="px-6 py-4 text-sm text-gray-700">
-                                      <button class="p-2 uppercase bg-orange-500 text-white text-sm rounded-lg font-bold">EDITAR</button>
+                                      <button (click)="updateForm(subscription.id)" class="p-2 uppercase bg-orange-500 text-white text-sm rounded-lg font-bold">EDITAR</button>
                                   </td>
                               </tr>
                           </tbody>
