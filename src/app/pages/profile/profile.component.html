@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="flex h-screen bg-gray-100">
-<app-dashboard></app-dashboard>
+  <app-dashboard></app-dashboard>
 
   <main class="flex-1 p-8">
     <div class="mb-8 flex items-center justify-between">
@@ -21,11 +21,6 @@
             <input class="mt-1 w-full rounded-md border-gray-300 shadow-sm" id="email" type="email" value={{email}}
               [disabled]="true" />
           </div>
-          <!-- <button
-            class="px-4 py-2 uppercase font-bold text-white bg-orange-500 hover:bg-orange-700 rounded-lg shadow-md transition"
-            aria-label="Editar perfil">
-            Editar Perfil
-          </button> -->
         </form>
       </div>
 
@@ -55,10 +50,9 @@
         </div>
         <div class="pt-2">
           <button
-            class="px-4 py-2 border uppercase font-bold border-red-500 text-red-500 hover:bg-red-600 hover:text-white rounded-lg shadow-md transition"
-            aria-label="Cancelar assinatura"
-            (click)="cancelSubscriptionAndDisableTransaction()">
-            CANCELAR
+            class="px-4 py-2 uppercase font-bold text-white bg-red-500 hover:bg-red-700 rounded-lg shadow-md transition"
+            (click)="cancelConfirm()">
+            Cancelar Assinatura
           </button>
         </div>
       </div>

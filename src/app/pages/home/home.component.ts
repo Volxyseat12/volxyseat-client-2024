@@ -3,6 +3,7 @@ import { SubscriptionComponent } from '../subscription/subscription.component';
 import { AboutComponent } from '../about/about.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { HeaderComponent } from '../../components/header/header.component';
+import { CancelComponent } from "../../components/cancel/cancel.component";
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,8 @@ import { HeaderComponent } from '../../components/header/header.component';
     SubscriptionComponent,
     AboutComponent,
     FooterComponent,
-  ],
+    CancelComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

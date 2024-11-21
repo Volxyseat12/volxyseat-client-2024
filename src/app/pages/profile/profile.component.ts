@@ -3,24 +3,22 @@ import { DashboardComponent } from '../../components/dashboard/dashboard.compone
 import { MercadoPagoService } from './../../services/mercado-pago.service';
 import { Component, OnInit } from '@angular/core';
 import { LogOutService } from '../../services/log-out.service';
-import { Router, CanActivate } from '@angular/router';
+import { Router } from '@angular/router';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
 import { SubscriptionService } from '../../services/subscription.service';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { CommonModule } from '@angular/common';
-import { ToastService } from 'angular-toastify';
 import { TransactionService } from '../../services/transaction.service';
-import { catchError, forkJoin, of } from 'rxjs';
-import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { ITransactionResponse } from '../../models/SubscriptionModel/ITransactionResponse';
-import { FooterComponent } from '../../components/footer/footer.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { CancelComponent } from '../../components/cancel/cancel.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
   standalone: true,
-  imports: [CommonModule, HeaderComponent, DashboardComponent],
+  imports: [CommonModule, HeaderComponent, DashboardComponent, MatDialogModule],
 })
 export class ProfileComponent implements OnInit {
   subscription: ISubscription | null = null;
@@ -36,10 +34,9 @@ export class ProfileComponent implements OnInit {
     private logOutService: LogOutService,
     private router: Router,
     private subscriptionService: SubscriptionService,
-    private mercadoPagoService: MercadoPagoService,
     private transactionService: TransactionService,
-    private _toastService: ToastService
-  ) {}
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.checkUserLogin();
@@ -134,43 +131,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  cancelSubscriptionAndDisableTransaction() {
-    const userMercadoPagoSubscriptionId =
-      this.userTransaction?.mercadoPagoSubscriptionId;
-    if (userMercadoPagoSubscriptionId) {
-      const userId: string | null = localStorage.getItem('clientId');
-      if (!userId) {
-        this._toastService.error('Usuário não logado.');
-        return;
-      }
-
-      if (!this.userTransaction) {
-        this._toastService.error('Transação do usuário não encontrada.');
-        return;
-      }
-      const cancelsubscription$ = this.mercadoPagoService
-        .cancelMercadoPagoSubscription(userMercadoPagoSubscriptionId)
-        .pipe(catchError((err) => of(`Erro no cancelamento: ${err.message}`)));
-
-      const disableTransaction$ = this.transactionService
-        .disableTransaction(userId)
-        .pipe(catchError((err) => of(`Erro na desativação: ${err.message}`)));
-
-      forkJoin([cancelsubscription$, disableTransaction$]).subscribe({
-        next: ([cancelRes, disableRes]) => {
-          console.log('Cancelamento de assinatura:', cancelRes);
-          console.log('Desativação de transação:', disableRes);
-          this._toastService.success('Plano cancelado com sucesso.');
-          this.getTransaction();
-        },
-        error: (err) => {
-          console.error('Erro ao processar:', err);
-          this._toastService.error('Erro ao cancelar plano.');
-        },
-      });
-
-    } else {
-      this._toastService.error('Nenhum plano adquirido.');
-    }
+  cancelConfirm() {
+    this.dialog.open(CancelComponent, {
+    });
   }
 }

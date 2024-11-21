@@ -15,6 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
-    JwtHelperService,
+    JwtHelperService, provideAnimationsAsync(),
   ],
 };

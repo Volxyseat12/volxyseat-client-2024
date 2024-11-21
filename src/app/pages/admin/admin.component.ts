@@ -1,22 +1,23 @@
-import { Component } from '@angular/core';
+import { ISubscriptionProperties } from './../../models/ISubscriptionProperties';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
-import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
-import { DashboardComponent } from '../../components/dashboard/dashboard.component';
+import { SubscriptionService } from '../../services/subscription.service';
+import { SubscriptionStatus } from '../../models/Enums/SubscriptionStatus';
+import { SubscriptionRequest } from '../../models/SubscriptionModel/SubscriptionRequest';
+import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastService } from 'angular-toastify';
+import { AuthService } from '../../services/auth/auth.service';
+import { DashboardComponent } from "../../components/dashboard/dashboard.component";
 import { HeaderComponent } from "../../components/header/header.component";
 import { FooterComponent } from "../../components/footer/footer.component";
 
-interface ISubscription {
-  id: string;
-  type: SubscriptionEnum;
-  description: string;
-  price: number;
-}
 
 @Component({
   selector: 'app-admin-subscription',
@@ -29,39 +30,117 @@ interface ISubscription {
     MatInputModule,
     MatTableModule,
     MatIconModule,
+    ReactiveFormsModule,
     DashboardComponent,
     HeaderComponent,
     FooterComponent
 ]
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit{
   SubscriptionEnum = SubscriptionEnum;
   username: string | null = null;
   isAuthenticated: boolean = false;
   showDropdown: boolean = false;
   showTypeDropdown: boolean = false;
-  selectedType: SubscriptionEnum | null = null;
+  showStatusDropdown = false;
+  selectedType: SubscriptionEnum = SubscriptionEnum.Basic;
+  selectedStatus: SubscriptionStatus = SubscriptionStatus.Active;
 
-  subscriptions: ISubscription[] = [
-    {
-      id: '1',
-      type: SubscriptionEnum.Basic,
-      description: 'Access to basic features and limited support.',
-      price: 19.99
+
+  constructor(private authService: AuthService, private router: Router, private subscriptionService: SubscriptionService, private _toastService: ToastService) {
+    this.checkUserLogin();
+    this.getSubscriptions();
+  }
+
+  ngOnInit(){
+    this.getSubscriptions();
+  }
+
+  subscriptionForm = new FormGroup({
+    description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    price: new FormControl(0,Validators.required),
+    mercadoPagoPlanId: new FormControl(''),
+    subscriptionProperties: new FormControl({}, Validators.required),
+    type: new FormControl(0, Validators.required),
+    status: new FormControl(SubscriptionStatus.Inactive, Validators.required)
+  })
+
+  subscriptions?: ISubscription[];
+  subscription: ISubscription = {
+    id: '',
+    description: '',
+    price: 0,
+    status: SubscriptionStatus.Inactive,
+    type: SubscriptionEnum.Basic,
+    subscriptionProperties: {
+      analytics: false,
+      apiAccess: false,
+      backup: false,
+      chat: false,
+      cloudStorage: false,
+      customization: false,
+      documentation: false,
+      email: false,
+      integration: false,
+      liveSupport: false,
+      messenger: false,
+      multiUser: false,
+      onboarding: false,
+      phone: false,
+      prioritySupport: false,
+      serviceLevel: false,
+      sla: false,
+      support: false,
+      training: false,
+      updates: false,
     },
-    {
-      id: '2',
-      type: SubscriptionEnum.Medium,
-      description: 'Access to all standard features and priority support.',
-      price: 59.99
-    },
-    {
-      id: '3',
-      type: SubscriptionEnum.Personalized,
-      description: 'Comprehensive access to advanced features and 24/7 support.',
-      price: 199.99
+    mercadoPagoPlanId: '',
+    createdOn: Date.prototype,
+    updatedOn: Date.prototype,
+  };
+  subscriptionRequest: SubscriptionRequest = {
+    description: '',
+    mercadoPagoPlanId: '',
+    price: 0,
+    status: SubscriptionStatus.Inactive,
+    type: SubscriptionEnum.Basic,
+    subscriptionProperties: {
+      analytics: false,
+      apiAccess: false,
+      backup: false,
+      chat: false,
+      cloudStorage: false,
+      customization: false,
+      documentation: false,
+      email: false,
+      integration: false,
+      liveSupport: false,
+      messenger: false,
+      multiUser: false,
+      onboarding: false,
+      phone: false,
+      prioritySupport: false,
+      serviceLevel: false,
+      sla: false,
+      support: false,
+      training: false,
+      updates: false,
     }
-  ];
+  };
+
+  getSubscriptions(){
+    this.subscriptionService.getAll()
+      .subscribe({
+        next : (data) => {
+        this.subscriptions = data;
+        console.log(data);
+        this.subscription = this.subscriptions[0];
+      },
+      error : (error) => {
+        console.error('Erro ao obter assinaturas:', error);
+      }
+    })
+  }
 
   subscriptionTypes = [
     SubscriptionEnum.Basic,
@@ -70,8 +149,24 @@ export class AdminComponent {
     SubscriptionEnum.Personalized
   ];
 
-  constructor(private logOutService: LogOutService, private router: Router) {
-    this.checkUserLogin();
+  subscriptionStatus =  [
+    SubscriptionStatus.Active,
+    SubscriptionStatus.Inactive
+  ];
+
+  subscriptionNumberToEnum(number: number): SubscriptionEnum{
+    switch (number) {
+      case 0:
+        return SubscriptionEnum.Basic;
+      case 1:
+        return SubscriptionEnum.Medium;
+      case 2:
+        return SubscriptionEnum.Advanced;
+      case 3:
+        return SubscriptionEnum.Personalized;
+      default:
+        return SubscriptionEnum.Personalized;
+    }
   }
 
   subscriptionEnumToString(enumValue: SubscriptionEnum): string {
@@ -89,6 +184,10 @@ export class AdminComponent {
     }
   }
 
+  subscriptionStatusToString(status: SubscriptionStatus): string {
+    return SubscriptionStatus[status];
+  }
+
   checkUserLogin() {
     const token = localStorage.getItem('token');
     this.username = localStorage.getItem('username');
@@ -97,21 +196,32 @@ export class AdminComponent {
 
   toggleUserDropdown(): void {
     this.showDropdown = !this.showDropdown;
-    this.showTypeDropdown = false; // Close the type dropdown when user dropdown is toggled
+    this.showTypeDropdown = false;
   }
 
   toggleTypeDropdown(): void {
     this.showTypeDropdown = !this.showTypeDropdown;
-    this.showDropdown = false; // Close the user dropdown when type dropdown is toggled
+    this.showDropdown = false;
+  }
+
+  toggleStatusDropdown() {
+    this.showStatusDropdown = !this.showStatusDropdown;
   }
 
   selectType(type: SubscriptionEnum): void {
     this.selectedType = type;
+    this.subscription.type = type;
     this.showTypeDropdown = false;
   }
 
+  selectStatus(status: SubscriptionStatus) {
+    this.selectedStatus = status;
+    this.subscription.status = status;
+    this.showStatusDropdown = false;
+  }
+
   logout() {
-    this.logOutService.logout().subscribe(
+    this.authService.logout().subscribe(
       () => {
         localStorage.clear();
         this.username = null;
@@ -122,5 +232,35 @@ export class AdminComponent {
         console.error('Erro ao fazer logout:', error);
       }
     );
+  }
+
+  updateSubscription(id: string) {
+      this.subscriptionService.updateSubscription(id, this.subscription)
+        .subscribe({
+          next: (response) => {
+            this._toastService.success('Plano atualizado com sucesso!')
+          },
+          error: (error) => {
+            this._toastService.error('Erro ao atualizar Plano!')
+            console.error('Erro ao atualizar plano:', error);
+          }
+        });
+  }
+
+  updateForm(id: string){
+    this.subscriptionService.getById(id).subscribe({
+      next: (data: ISubscription) => {
+        this.subscription = data;
+        console.log(this.subscription);
+        this.subscriptionForm.patchValue({
+          ...this.subscription,
+        })
+        this.selectType(this.subscription.type)
+        this.selectStatus(this.subscription.status)
+      },
+      error: () => {
+        this._toastService.error("Erro ao buscar plano")
+      }
+    })
   }
 }

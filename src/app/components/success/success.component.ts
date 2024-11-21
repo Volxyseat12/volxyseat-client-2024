@@ -8,8 +8,6 @@ import {
   keyframes,
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
-import { TransactionService } from '../../services/transaction.service';
 
 @Component({
   selector: 'app-payment-success',

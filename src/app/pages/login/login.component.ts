@@ -46,7 +46,7 @@ export class LoginComponent {
   }
 
   public loginRequest: ILogin = {
-    userName: '',
+    email: '',
     password: '',
   };
 
