@@ -5,11 +5,11 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
-import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { HeaderComponent } from "../../components/header/header.component";
 import { FooterComponent } from "../../components/footer/footer.component";
+import { AuthService } from '../../services/auth/auth.service';
 
 interface ISubscription {
   id: string;
@@ -70,7 +70,7 @@ export class AdminComponent {
     SubscriptionEnum.Personalized
   ];
 
-  constructor(private logOutService: LogOutService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
     this.checkUserLogin();
   }
 
@@ -111,7 +111,7 @@ export class AdminComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe(
+    this.authService.logout().subscribe(
       () => {
         localStorage.clear();
         this.username = null;

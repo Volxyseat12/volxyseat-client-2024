@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../../services/login.service';
-import { RegisterService } from '../../services/register.service';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -11,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { IRegister } from '../../models/SubscriptionModel/IRegister';
 import { ToastService } from 'angular-toastify';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +23,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor(
-    private registerService: RegisterService,
+    private authService: AuthService,
     private router: Router,
     private _toastService: ToastService,
     private fb: FormBuilder
@@ -36,15 +35,15 @@ export class RegisterComponent {
     });
   }
 
-  registerAndLogin() {
+  register() {
     if (this.registerForm.valid) {
-      const newRegister = {
+      const newRegister: IRegister = {
         name: this.registerForm.get('companyName')?.value,
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value,
       };
       console.log(newRegister);
-      this.registerService.post(newRegister).subscribe({
+      this.authService.register(newRegister).subscribe({
         next: (response: any) => {
           console.log('Temos uma nova empresa registrada!', response);
           this.registerForm.reset();

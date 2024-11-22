@@ -1,9 +1,9 @@
+import { AuthService } from './../../services/auth/auth.service';
 import { HeaderComponent } from '../../components/header/header.component';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
 import { MercadoPagoService } from './../../services/mercado-pago.service';
 import { Component, OnInit } from '@angular/core';
-import { LogOutService } from '../../services/log-out.service';
-import { Router, CanActivate } from '@angular/router';
+import { Router } from '@angular/router';
 import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
 import { SubscriptionService } from '../../services/subscription.service';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
@@ -11,9 +11,8 @@ import { CommonModule } from '@angular/common';
 import { ToastService } from 'angular-toastify';
 import { TransactionService } from '../../services/transaction.service';
 import { catchError, forkJoin, of } from 'rxjs';
-import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { ITransactionResponse } from '../../models/SubscriptionModel/ITransactionResponse';
-import { FooterComponent } from '../../components/footer/footer.component';
+
 
 @Component({
   selector: 'app-profile',
@@ -33,7 +32,7 @@ export class ProfileComponent implements OnInit {
   userTransaction: ITransactionResponse | null = null;
 
   constructor(
-    private logOutService: LogOutService,
+    private authService: AuthService,
     private router: Router,
     private subscriptionService: SubscriptionService,
     private mercadoPagoService: MercadoPagoService,
@@ -66,7 +65,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    this.logOutService.logout();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 

@@ -3,8 +3,6 @@ import { ToastModule } from 'primeng/toast';
 import { TransactionService } from './../../services/transaction.service';
 import { Component } from '@angular/core';
 
-import { LoginService } from '../../services/login.service';
-
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,8 +12,7 @@ import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ILogin } from '../../models/SubscriptionModel/ILogin';
 import { ToastService } from 'angular-toastify';
-
-
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -37,21 +34,20 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private cookieService: CookieService,
-    private loginService: LoginService,
+    private authService: AuthService,
     private transactionService: TransactionService,
-    private messageService: MessageService,
     private _toastService: ToastService
   ) {
     this.cookiesAceitos = this.cookieService.get('aceitou_cookies') === 'true';
   }
 
   public loginRequest: ILogin = {
-    userName: '',
+    email: '',
     password: '',
   };
 
   login() {
-    this.loginService.post(this.loginRequest).subscribe({
+    this.authService.login(this.loginRequest).subscribe({
       next: (response: any) => {
         this.transactionService.getById(response.clientId).subscribe({
           error: (error: any) => {

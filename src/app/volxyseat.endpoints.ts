@@ -12,6 +12,8 @@ export interface Endpoints {
   createMPSubscription: (mpApiUrl: string) => string;
   calcelMPSubscription: (apiUrl: string, id: string) => string;
 
+  register: (apiUrl: string) => string;
+  login: (apiUrl: string) => string;
   logout: (apiUrl: string) => string;
 }
 
@@ -46,6 +48,8 @@ export namespace VolxyseatEndpoints {
     calcelMPSubscription: (apiUrl: string, id: string): string =>
       `${apiUrl}${base}/Payment/cancel-preapproval/${id}`,
 
+    register: (apiUrl: string): string => `${apiUrl}${base}/User/register`,
+    login: (apiUrl: string): string => `${apiUrl}${base}/User/login`,
     logout: (apiUrl: string): string => `${apiUrl}${base}/User/logout`,
   };
 }

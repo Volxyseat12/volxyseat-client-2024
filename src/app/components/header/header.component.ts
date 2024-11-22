@@ -1,6 +1,6 @@
+import { AuthService } from './../../services/auth/auth.service';
 import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
 import { Component } from '@angular/core';
-import { LogOutService } from '../../services/log-out.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
 import { TransactionService } from '../../services/transaction.service';
@@ -28,7 +28,7 @@ export class HeaderComponent {
   userTransaction: ITransaction | null = null;
 
   constructor(
-    private logOutService: LogOutService,
+    private authService: AuthService,
     private tranService: TransactionService,
     private subService: SubscriptionService,
     private router: Router
@@ -67,12 +67,12 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.logOutService.logout().subscribe({
+    this.authService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.username = null;
         this.isAuthenticated = false;
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
       },
       error: (error: any) => {
         console.error('Erro ao fazer logout:', error);

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { LogOutService } from '../../services/log-out.service';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { ToastService } from 'angular-toastify';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +16,12 @@ export class DashboardComponent {
   username: string | null = null;
   isAuthenticated: boolean = false;
 
-  constructor(private logOutService: LogOutService, private router: Router, private toastService: ToastService, private messageService: MessageService) {
+  constructor(private authService: AuthService, private router: Router, private toastService: ToastService, private messageService: MessageService) {
 
   }
 
   logout() {
-    this.logOutService.logout().subscribe({
+    this.authService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.username = null;
