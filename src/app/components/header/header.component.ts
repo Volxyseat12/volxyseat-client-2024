@@ -1,5 +1,5 @@
 import { ISubscription } from './../../models/SubscriptionModel/ISubscription';
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { SubscriptionService } from '../../services/subscription.service';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { AuthService } from '../../services/auth/auth.service';
+import { BlobService } from '../../services/blob.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,7 @@ import { AuthService } from '../../services/auth/auth.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   username: string | null = null;
   isAuthenticated: boolean = false;
   isMenuOpen = false;
@@ -27,12 +28,18 @@ export class HeaderComponent {
   userPlanType: string | null = null;
   userPlan: ISubscription | null = null;
   userTransaction: ITransaction | null = null;
+  blobUrl: string = '';
+
+  ngOnInit(): void {
+    this.blobUrl = this.blobService.getBlobUrl();
+  }
 
   constructor(
     private authService: AuthService,
     private tranService: TransactionService,
     private subService: SubscriptionService,
-    private router: Router
+    private router: Router,
+    private blobService: BlobService
   ) {
     this.checkUserLogin();
   }

@@ -9,31 +9,33 @@ import { CommonModule } from '@angular/common';
 import { ILogin } from '../../models/SubscriptionModel/ILogin';
 import { ToastService } from 'angular-toastify';
 import { AuthService } from '../../services/auth/auth.service';
+import { BlobService } from '../../services/blob.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    FormsModule,
-    ButtonModule,
-    RippleModule,
-    CommonModule,
-  ],
+  imports: [FormsModule, ButtonModule, RippleModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-
 export class LoginComponent {
   transactionId!: string;
+
+  blobUrl: string = '';
+
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private transactionService: TransactionService,
-    private _toastService: ToastService
-  ) {
-  }
+    private _toastService: ToastService,
+    private blobService: BlobService
+  ) {}
 
+  ngOnInit(): void {
+    this.blobUrl = this.blobService.getBlobUrl();
+  }
+  
   public loginRequest: ILogin = {
     email: '',
     password: '',
