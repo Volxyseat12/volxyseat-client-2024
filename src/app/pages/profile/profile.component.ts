@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit {
     private mercadoPagoService: MercadoPagoService,
     private transactionService: TransactionService,
     private _toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkUserLogin();
@@ -91,7 +91,7 @@ export class ProfileComponent implements OnInit {
           this.loadSubscriptionFromStorage();
         },
         error: (error: any) => {
-          console.log(error.message);
+          this._toastService.warn('Você ainda não tem um plano para exibirmos!');
           this.subscription = null;
           this.isLoading = false;
         },
@@ -99,7 +99,6 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadSubscriptionFromStorage() {
-    console.log(this.userTransaction?.isActive);
     if (!this.userTransaction?.isActive) {
       this.subscription = null;
       this.isLoading = false;
@@ -121,7 +120,6 @@ export class ProfileComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err: any) => {
-        console.log('estou aqui');
         if (err && err.message) {
           this.error = err.message;
         } else {
@@ -157,8 +155,6 @@ export class ProfileComponent implements OnInit {
 
       forkJoin([cancelsubscription$, disableTransaction$]).subscribe({
         next: ([cancelRes, disableRes]) => {
-          console.log('Cancelamento de assinatura:', cancelRes);
-          console.log('Desativação de transação:', disableRes);
           this._toastService.success('Plano cancelado com sucesso.');
           this.getTransaction();
         },

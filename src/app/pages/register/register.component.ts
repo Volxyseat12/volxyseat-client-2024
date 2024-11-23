@@ -42,10 +42,8 @@ export class RegisterComponent {
         email: this.registerForm.get('email')?.value,
         password: this.registerForm.get('password')?.value,
       };
-      console.log(newRegister);
       this.authService.register(newRegister).subscribe({
         next: (response: any) => {
-          console.log('Temos uma nova empresa registrada!', response);
           this.registerForm.reset();
           this._toastService.success('Registrado com Sucesso!');
           this.router.navigate(['/login']);

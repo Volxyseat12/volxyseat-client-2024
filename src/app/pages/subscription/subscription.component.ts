@@ -68,7 +68,6 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       { name: 'Integração', key: 'integration' },
       { name: 'Acesso à API', key: 'apiAccess' },
       { name: 'Armazenamento em nuvem', key: 'cloudStorage' },
-      { name: 'Multiusuário', key: 'multiUser' },
     ],
     'Suporte Prioritário': [
       { name: 'Suporte prioritário', key: 'prioritySupport' },
@@ -100,7 +99,6 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._subscription))
       .subscribe((response: ISubscription[]) => {
         this.subscriptions = response;
-        console.log(this.subscriptions);
         this.setSubscriptionProperties(this.subscriptions[0]);
       });
   }

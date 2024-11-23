@@ -50,9 +50,6 @@ export class LoginComponent {
     this.authService.login(this.loginRequest).subscribe({
       next: (response: any) => {
         this.transactionService.getById(response.clientId).subscribe({
-          error: (error: any) => {
-            console.log('Erro ao obter transação!', error);
-          },
         });
         localStorage.setItem('token', response.jwt);
         localStorage.setItem('email', response.email);

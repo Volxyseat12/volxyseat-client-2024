@@ -89,7 +89,7 @@ export class TemplatesComponent {
 
   proceed() {
     if (this.selectedTemplate.value) {
-      this.router.navigate(['/customize'], {
+      this.router.navigate(['/profile'], {
         queryParams: { templateId: this.selectedTemplate.value }
       });
     }

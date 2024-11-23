@@ -21,6 +21,7 @@ import { IPreApprovalResponse } from '../../models/MercadoPago/IPreApprovalRespo
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { TransactionService } from '../../services/transaction.service';
 import { ICreateTransactionResponse } from '../../models/ICreateTransactionResponse';
+import { ToastService } from 'angular-toastify';
 declare var MercadoPago: any;
 
 @Component({
@@ -66,7 +67,8 @@ export class PaymentComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private mercadoPagoService: MercadoPagoService,
     private router: Router,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private _toastService: ToastService
   ) { this.createTransaction(); }
 
   private cardForm: any;
@@ -119,11 +121,10 @@ export class PaymentComponent implements OnInit {
   
       this.transactionService.post(transaction).subscribe({
         next: (res: ICreateTransactionResponse) => {
-          console.log(res);
           localStorage.setItem('transactionId', res.transactionId);
         },
         error: (err) => {
-          console.log(err.message);
+          this._toastService.error('Erro ao criar transação.');
         },
       });
     }
@@ -193,7 +194,6 @@ export class PaymentComponent implements OnInit {
       callbacks: {
         onFormMounted: (error: any) => {
           if (error) console.warn('Form Mounted handling error: ', error);
-          else console.log('Form mounted');
         },
         onSubmit: (event: Event) => this.processPayment(event),
         onFetching: (resource: any) =>
@@ -217,7 +217,6 @@ export class PaymentComponent implements OnInit {
       .createMercadoPagoSubscription(createMercadoPagoSubscriptionModel)
       .toPromise()
       .then((res) => {
-        console.log(res);
         let preApproval = <IPreApprovalResponse>res;
         localStorage.setItem('preApprovalId', preApproval.id);
         this.onSuccess();
@@ -251,7 +250,6 @@ export class PaymentComponent implements OnInit {
     if (this.plan) {
       const todayDate = new Date();
       const { mercadoPagoPlanId, type, price } = this.plan;
-      console.log(mercadoPagoPlanId);
   
       const createSubscription: ICreateSubscription = {
         preapproval_plan_id: mercadoPagoPlanId,
@@ -267,7 +265,6 @@ export class PaymentComponent implements OnInit {
           
           if (transactionId) {
             localStorage.setItem('transactionId', transactionId);
-            console.log('Transaction ID set:', transactionId);
           } else {
             console.error('Transaction ID não encontrado.');
           }

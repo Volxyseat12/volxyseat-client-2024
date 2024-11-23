@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
+import { ToastService } from 'angular-toastify';
 
 @Component({
   selector: 'app-header',
@@ -31,7 +32,8 @@ export class HeaderComponent {
     private authService: AuthService,
     private tranService: TransactionService,
     private subService: SubscriptionService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {
     this.checkUserLogin();
   }
@@ -67,17 +69,10 @@ export class HeaderComponent {
   }
 
   logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        localStorage.clear();
-        this.username = null;
-        this.isAuthenticated = false;
-        this.router.navigate(['/']);
-      },
-      error: (error: any) => {
-        console.error('Erro ao fazer logout:', error);
-      },
-    });
+    localStorage.clear();
+    this.username = null;
+    this.isAuthenticated = false;
+    this.router.navigate(['/']);
   }
 
   getTransaction(): void {
@@ -87,7 +82,6 @@ export class HeaderComponent {
         this.getSubscriptionById(<string>this.userTransaction?.subscriptionId);
       },
       error: (error: any) => {
-        console.log(error.message);
       },
     });
   }
@@ -101,7 +95,6 @@ export class HeaderComponent {
             <SubscriptionEnum>this.userPlan?.type
           );
         else this.userPlanType = 'Sem Plano';
-        console.log(this.userPlanType);
       },
     });
   }

@@ -1,22 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { SubscriptionEnum } from '../../models/Enums/SubscriptionEnum';
-import { Router } from '@angular/router';
 import { DashboardComponent } from '../../components/dashboard/dashboard.component';
-import { HeaderComponent } from "../../components/header/header.component";
-import { FooterComponent } from "../../components/footer/footer.component";
-import { AuthService } from '../../services/auth/auth.service';
-
-interface ISubscription {
-  id: string;
-  type: SubscriptionEnum;
-  description: string;
-  price: number;
-}
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ISubscriptionRequest } from '../../models/SubscriptionModel/ISubscriptionRequest';
+import { SubscriptionStatus } from '../../models/Enums/SubscriptionStatus';
+import { SubscriptionService } from '../../services/subscription.service';
+import { ToastService } from 'angular-toastify';
+import { ISubscription } from '../../models/SubscriptionModel/ISubscription';
+import { ISubscriptionProperties, PropertyCategoryMapping } from '../../models/ISubscriptionProperties';
 
 @Component({
   selector: 'app-admin-subscription',
@@ -31,37 +29,87 @@ interface ISubscription {
     MatIconModule,
     DashboardComponent,
     HeaderComponent,
-    FooterComponent
-]
+    FooterComponent,
+    FormsModule,
+    ReactiveFormsModule
+  ]
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
   SubscriptionEnum = SubscriptionEnum;
+  SubscriptionStatus = SubscriptionStatus;
+  selectedCategory: string = 'Suporte';
   username: string | null = null;
   isAuthenticated: boolean = false;
-  showDropdown: boolean = false;
   showTypeDropdown: boolean = false;
   selectedType: SubscriptionEnum | null = null;
+  isTransitioning: boolean = false;
 
-  subscriptions: ISubscription[] = [
-    {
-      id: '1',
-      type: SubscriptionEnum.Basic,
-      description: 'Access to basic features and limited support.',
-      price: 19.99
-    },
-    {
-      id: '2',
-      type: SubscriptionEnum.Medium,
-      description: 'Access to all standard features and priority support.',
-      price: 59.99
-    },
-    {
-      id: '3',
-      type: SubscriptionEnum.Personalized,
-      description: 'Comprehensive access to advanced features and 24/7 support.',
-      price: 199.99
-    }
-  ];
+  subscriptionForm = new FormGroup({
+    description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    price: new FormControl(0, Validators.required),
+    mercadoPagoPlanId: new FormControl(''),
+    subscriptionProperties: new FormControl({}, Validators.required),
+    type: new FormControl(0, Validators.required),
+    status: new FormControl(SubscriptionStatus.Inactive, Validators.required)
+  });
+
+  subscriptionPropertiesForm = new FormGroup({
+    support: new FormControl(false, Validators.required),
+    phone: new FormControl(false, Validators.required),
+    email: new FormControl(false, Validators.required),
+    messenger: new FormControl(false, Validators.required),
+    chat: new FormControl(false, Validators.required),
+    liveSupport: new FormControl(false, Validators.required),
+    documentation: new FormControl(false, Validators.required),
+    onboarding: new FormControl(false, Validators.required),
+    training: new FormControl(false, Validators.required),
+    updates: new FormControl(false, Validators.required),
+    backup: new FormControl(false, Validators.required),
+    customization: new FormControl(false, Validators.required),
+    analytics: new FormControl(false, Validators.required),
+    integration: new FormControl(false, Validators.required),
+    apiAccess: new FormControl(false, Validators.required),
+    cloudStorage: new FormControl(false, Validators.required),
+    multiUser: new FormControl(false, Validators.required),
+    prioritySupport: new FormControl(false, Validators.required),
+    sla: new FormControl(false, Validators.required),
+    serviceLevel: new FormControl(false, Validators.required)
+  });
+
+  subscriptions: ISubscription[] = [];
+
+  subscriptionPropertiesRequest: ISubscriptionProperties = {
+    support: false,
+    phone: false,
+    email: false,
+    messenger: false,
+    chat: false,
+    liveSupport: false,
+    documentation: false,
+    onboarding: false,
+    training: false,
+    updates: false,
+    backup: false,
+    customization: false,
+    analytics: false,
+    integration: false,
+    apiAccess: false,
+    cloudStorage: false,
+    multiUser: false,
+    prioritySupport: false,
+    sla: false,
+    serviceLevel: false,
+  };
+
+  selectedSubscription: ISubscriptionRequest = {
+    id: '',
+    type: SubscriptionEnum.Basic,
+    description: '',
+    price: 0,
+    mercadoPagoPlanId: '',
+    status: SubscriptionStatus.Active,
+    subscriptionProperties: this.subscriptionPropertiesRequest
+  };
 
   subscriptionTypes = [
     SubscriptionEnum.Basic,
@@ -70,8 +118,24 @@ export class AdminComponent {
     SubscriptionEnum.Personalized
   ];
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private subscriptionService: SubscriptionService, private toastr: ToastService) {
     this.checkUserLogin();
+  }
+
+  ngOnInit(): void {
+    this.getSubscriptions();
+  }
+
+  setSelectedCategory(category: string): void {
+    this.isTransitioning = true;
+    setTimeout(() => {
+      this.selectedCategory = category;
+      this.isTransitioning = false;
+    }, 300);
+  }
+
+  getPropertiesForCategory() {
+    return this.propertyCategoryMapping[this.selectedCategory] || [];
   }
 
   subscriptionEnumToString(enumValue: SubscriptionEnum): string {
@@ -89,20 +153,40 @@ export class AdminComponent {
     }
   }
 
+  getSubscriptions() {
+    this.subscriptionService.getAll()
+      .subscribe({
+        next: (data) => {
+          this.subscriptions = data;
+        },
+        error: (error) => {
+          this.toastr.error('Erro ao carregar assinaturas.');
+        }
+      });
+  }
+
+  updatedForm(id: string) {
+    this.subscriptionService.getById(id).subscribe({
+      next: (data: ISubscription) => {
+        this.selectedSubscription = data;
+        this.subscriptionForm.patchValue({
+          ...this.selectedSubscription,
+        });
+      },
+      error: () => {
+        this.toastr.error("Erro ao buscar plano");
+      }
+    });
+  }
+
   checkUserLogin() {
     const token = localStorage.getItem('token');
     this.username = localStorage.getItem('username');
     this.isAuthenticated = !!token;
   }
 
-  toggleUserDropdown(): void {
-    this.showDropdown = !this.showDropdown;
-    this.showTypeDropdown = false; // Close the type dropdown when user dropdown is toggled
-  }
-
   toggleTypeDropdown(): void {
     this.showTypeDropdown = !this.showTypeDropdown;
-    this.showDropdown = false; // Close the user dropdown when type dropdown is toggled
   }
 
   selectType(type: SubscriptionEnum): void {
@@ -110,17 +194,73 @@ export class AdminComponent {
     this.showTypeDropdown = false;
   }
 
-  logout() {
-    this.authService.logout().subscribe(
-      () => {
-        localStorage.clear();
-        this.username = null;
-        this.isAuthenticated = false;
-        this.router.navigate(['/']);
-      },
-      (error: any) => {
-        console.error('Erro ao fazer logout:', error);
-      }
-    );
+  saveEditedSubscription(): void {
+    if (!this.selectedSubscription.id) {
+      console.error('A assinatura selecionada precisa ter um ID válido.');
+      return;
+    }
+
+    this.selectedSubscription.description = this.subscriptionForm.get('description')?.value ?? '';
+    this.selectedSubscription.price = this.subscriptionForm.get('price')?.value ?? 0;
+    this.selectedSubscription.mercadoPagoPlanId = this.subscriptionForm.get('mercadoPagoPlanId')?.value ?? '';
+    this.selectedSubscription.type = this.subscriptionForm.get('type')?.value ?? SubscriptionEnum.Basic;
+    this.selectedSubscription.status = this.subscriptionForm.get('status')?.value ?? SubscriptionStatus.Inactive;
+
+    this.subscriptionService.updateSubscription(this.selectedSubscription)
+      .subscribe({
+        next: () => {
+          this.toastr.success('Assinatura atualizada com sucesso!');
+          this.getSubscriptions();
+        },
+        error: (err) => {
+          this.toastr.error('Erro ao atualizar assinatura.');
+        }
+      });
   }
+
+  categories = [
+    { name: 'Suporte' },
+    { name: 'Documentação' },
+    { name: 'Funcionalidades' },
+    { name: 'Suporte Prioritário' },
+  ];
+
+  onSubscriptionPropertyChange(key: keyof ISubscriptionProperties, event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (this.selectedSubscription.subscriptionProperties) {
+      this.selectedSubscription.subscriptionProperties = {
+        ...this.selectedSubscription.subscriptionProperties,
+        [key]: input.checked,
+      };
+    }
+  }
+
+  propertyCategoryMapping: PropertyCategoryMapping = {
+    'Suporte': [
+      { key: 'support', name: 'Suporte' },
+      { key: 'phone', name: 'Telefone' },
+      { key: 'email', name: 'E-mail' },
+      { key: 'messenger', name: 'Messenger' },
+      { key: 'chat', name: 'Chat' }
+    ],
+    'Documentação': [
+      { key: 'documentation', name: 'Documentação' },
+      { key: 'onboarding', name: 'Onboarding' },
+      { key: 'training', name: 'Treinamento' },
+      { key: 'updates', name: 'Atualizações' },
+    ],
+    'Funcionalidades': [
+      { key: 'backup', name: 'Backup' },
+      { key: 'customization', name: 'Customização' },
+      { key: 'analytics', name: 'Analytics' },
+      { key: 'integration', name: 'Integração' },
+      { key: 'apiAccess', name: 'Acesso à API' },
+      { key: 'cloudStorage', name: 'Armazenamento em Nuvem' },
+      { key: 'multiUser', name: 'Múltiplos Usuários' },
+      { key: 'prioritySupport', name: 'Suporte Prioritário' },
+      { key: 'sla', name: 'SLA' },
+      { key: 'serviceLevel', name: 'Nível de Serviço' }
+    ]
+  };
 }

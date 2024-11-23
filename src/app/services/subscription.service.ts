@@ -5,6 +5,7 @@ import { environment } from '../environments/environment';
 import { VolxyseatEndpoints } from '../volxyseat.endpoints';
 import { SubscriptionEnum } from '../models/Enums/SubscriptionEnum';
 import { ISubscription } from '../models/SubscriptionModel/ISubscription';
+import { ISubscriptionRequest } from '../models/SubscriptionModel/ISubscriptionRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class SubscriptionService {
     ISubscription[]
   >([]);
 
-  apiUrl = `${environment.apiUrl}/Subscription`;
+  apiUrl = `${environment.apiUrl}/api/v1/Subscription`;
 
   constructor(private http: HttpClient) {}
 
@@ -68,5 +69,9 @@ export class SubscriptionService {
 
   getSubscriptionStatus(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/status/${id}`);
+  }
+
+  updateSubscription(subscription: ISubscriptionRequest): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${subscription.id}`, subscription);
   }
 }
