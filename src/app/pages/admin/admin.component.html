@@ -71,48 +71,49 @@
                         </div>
 
                         <!-- Propriedades -->
-                         <form [formGroup]="subscriptionPropertiesForm">
-                        <div>
-                            <div class="flex gap-8 items-center justify-center">
-                                <button *ngFor="let category of categories" (click)="setSelectedCategory(category.name)"
-                                    [ngClass]="{
+                        <form [formGroup]="subscriptionPropertiesForm">
+                            <div>
+                                <div class="flex gap-8 items-center justify-center">
+                                    <button *ngFor="let category of categories"
+                                        (click)="setSelectedCategory(category.name)" [ngClass]="{
           'default': selectedCategory === category.name,
           'ghost': selectedCategory !== category.name
         }" class="flex items-center justify-start relative group dark:md:hover:text-orange-600 hover:font-bold transition-transform duration-300 ease-in-out transform hover:scale-105">
-                                    {{ category.name }}
-                                    <span
-                                        class="absolute bottom-0 max-w-[50%] left-0 w-0 h-[2px] bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
-                                </button>
-                            </div>
+                                        {{ category.name }}
+                                        <span
+                                            class="absolute bottom-0 max-w-[50%] left-0 w-0 h-[2px] bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+                                    </button>
+                                </div>
 
-                            <div class="bg-orange-50 p-4 rounded-lg">
-                                <h3 class="font-bold text-orange-500 uppercase mb-4">
-                                    {{ selectedCategory }}
-                                </h3>
-                                <div class="transition-opacity duration-500 ease-in-out"
-                                    [ngClass]="{ 'opacity-0': isTransitioning, 'opacity-100': !isTransitioning }">
-                                    <div *ngFor="let property of getPropertiesForCategory()"
-                                        class="grid grid-cols-5 gap-6 py-2 border-t border-white items-center">
-                                        <div class="col-span-1">{{ property.name }}</div>
-                                        <div class="flex justify-center items-center">
-                                            <div class="flex items-center justify-center">
-                                                <input type="checkbox" formControlName="{{ property.key }}"
-                                                    [checked]="selectedSubscription.subscriptionProperties[property.key]"
-                                                    class="w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-orange-500 checked:border-orange-500 focus:ring-2 focus:ring-orange-300"
-                                                    (change)="onSubscriptionPropertyChange(property.key, $event)">
+                                <div class="bg-orange-50 p-4 rounded-lg">
+                                    <h3 class="font-bold text-orange-500 uppercase mb-4">
+                                        {{ selectedCategory }}
+                                    </h3>
+                                    <div class="transition-opacity duration-500 ease-in-out"
+                                        [ngClass]="{ 'opacity-0': isTransitioning, 'opacity-100': !isTransitioning }">
+                                        <div *ngFor="let property of getPropertiesForCategory()"
+                                            class="grid grid-cols-5 gap-6 py-2 border-t border-white items-center">
+                                            <div class="col-span-1">{{ property.name }}</div>
+                                            <div class="flex justify-center items-center">
+                                                <div class="flex items-center justify-center">
+                                                    <input type="checkbox" formControlName="{{ property.key }}"
+                                                        [checked]="selectedSubscription.subscriptionProperties[property.key]"
+                                                        class="w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-orange-500 checked:border-orange-500 focus:ring-2 focus:ring-orange-300"
+                                                        (change)="onSubscriptionPropertyChange(property.key, $event)">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        </div>
-                      </form>
+                            </div>
+                        </form>
 
                         <!-- Botão Salvar -->
                         <button
                             class="bg-[#F97316] hover:bg-[#EA580C] w-full mt-4 text-white py-2 rounded-lg uppercase font-bold"
-                            (click)="saveEditedSubscription(selectedSubscription.id)" type="button">
+                            (click)="saveEditedSubscription(selectedSubscription.id)" type="button"
+                            [disabled]="!subscriptionForm.valid">
                             Salvar Assinatura
                         </button>
 
@@ -130,7 +131,9 @@
                                 <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Tipo</th>
                                 <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Descrição
                                 </th>
-                                <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Desconto
+                                <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Preço
+                                </th>
+                                <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Status
                                 </th>
                                 <th class="px-6 py-3 text-left text-sm font-bold text-orange-500 uppercase">Ações</th>
                             </tr>
@@ -142,9 +145,15 @@
                                     subscriptionEnumToString(subscription.type) }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700">{{ subscription.description }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700">R{{ subscription.price | currency }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700 gap-2 flex">
-                                    <button class="p-2 uppercase bg-orange-500 text-white text-sm rounded-lg font-bold"
-                                        (click)="updateForm(subscription.id)">Editar</button>
+                                <td class="px-6 py-4 text-sm text-gray-700">
+                                    <span
+                                        [ngClass]="{ 'text-green-500': subscription.status === SubscriptionStatus.Active, 'text-red-500': subscription.status === SubscriptionStatus.Inactive }">
+                                        {{ subscription.status === SubscriptionStatus.Active ? 'Ativo' : 'Inativo' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-700">
+                                    <button class=" p-2 uppercase bg-orange-500 text-white text-sm rounded-lg
+                                    font-bold" (click)="updateForm(subscription.id)">Editar</button>
                                 </td>
                             </tr>
                             }

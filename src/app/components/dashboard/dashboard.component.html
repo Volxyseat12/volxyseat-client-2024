@@ -9,12 +9,14 @@
             <i class="pi pi-home text-gray-700"></i>
             <span>Perfil</span>
         </a>
+        @if (this.authService.getUserRoles().includes("admin")) {
         <a href="/admin"
             class="flex items-center space-x-2 rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 transition"
             aria-label="Administração">
             <i class="pi pi-cog text-gray-700"></i>
             <span>Admin</span>
         </a>
+        }
     </nav>
 
     <div class="mt-auto p-4">

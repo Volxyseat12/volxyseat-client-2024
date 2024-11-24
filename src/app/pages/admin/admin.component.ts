@@ -43,25 +43,25 @@ export class AdminComponent implements OnInit {
   subscriptions?: ISubscription[];
   subscriptionProperties: ISubscriptionProperties = {
     analytics: false,
-      apiAccess: false,
-      backup: false,
-      chat: false,
-      cloudStorage: false,
-      customization: false,
-      documentation: false,
-      email: false,
-      integration: false,
-      liveSupport: false,
-      messenger: false,
-      multiUser: false,
-      onboarding: false,
-      phone: false,
-      prioritySupport: false,
-      serviceLevel: false,
-      sla: false,
-      support: false,
-      training: false,
-      updates: false,
+    apiAccess: false,
+    backup: false,
+    chat: false,
+    cloudStorage: false,
+    customization: false,
+    documentation: false,
+    email: false,
+    integration: false,
+    liveSupport: false,
+    messenger: false,
+    multiUser: false,
+    onboarding: false,
+    phone: false,
+    prioritySupport: false,
+    serviceLevel: false,
+    sla: false,
+    support: false,
+    training: false,
+    updates: false,
   };
   subscriptionPropertiesRequest: ISubscriptionProperties = {
     support: false,
@@ -107,18 +107,18 @@ export class AdminComponent implements OnInit {
 
   constructor(private subscriptionService: SubscriptionService, private _toastService: ToastService) {
 
-    }
+  }
 
-    ngOnInit(): void {
-      this.getSubscriptions();
-      if (this.selectedSubscription.id) {
-        this.updateForm(this.selectedSubscription.id);
-      }
+  ngOnInit(): void {
+    this.getSubscriptions();
+    if (this.selectedSubscription.id) {
+      this.updateForm(this.selectedSubscription.id);
     }
+  }
 
   subscriptionForm = new FormGroup({
-    description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-    price: new FormControl(0,Validators.required),
+    description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+    price: new FormControl(0, [Validators.required, Validators.min(0)]),
     mercadoPagoPlanId: new FormControl(''),
     type: new FormControl(0, Validators.required),
     status: new FormControl(SubscriptionStatus.Inactive, Validators.required),
@@ -154,176 +154,176 @@ export class AdminComponent implements OnInit {
         this.subscriptions = data;
         console.log(data);
       },
-      error : () => {
+      error: () => {
         this._toastService.error('Erro ao buscar planos');
       }
     });
-    };
+  };
 
-    updateForm(id: string) {
-      this.subscriptionService.getById(id).subscribe({
-        next: (data: ISubscription) => {
-          this.selectedSubscription = data;
-          console.log(this.selectedSubscription);
-          this.subscriptionForm.patchValue({
-            ...this.selectedSubscription,
-          });
-    
-          this.subscriptionPropertiesForm.patchValue({
-            ...this.selectedSubscription.subscriptionProperties,
-          });
-        },
-        error: () => {
-          this._toastService.error("Erro ao buscar plano");
-        }
-      })
-    }
-    
-    subscriptionTypes = [
-      SubscriptionEnum.Basic,
-      SubscriptionEnum.Medium,
-      SubscriptionEnum.Advanced,
-      SubscriptionEnum.Personalized
-    ];
+  updateForm(id: string) {
+    this.subscriptionService.getById(id).subscribe({
+      next: (data: ISubscription) => {
+        this.selectedSubscription = data;
+        console.log(this.selectedSubscription);
+        this.subscriptionForm.patchValue({
+          ...this.selectedSubscription,
+        });
 
-    subscriptionStatus =  [
-      SubscriptionStatus.Active,
-      SubscriptionStatus.Inactive
-    ];
-
-    subscriptionNumberToEnum(number: number): SubscriptionEnum{
-      switch (number) {
-        case 0:
-          return SubscriptionEnum.Basic;
-        case 1:
-          return SubscriptionEnum.Medium;
-        case 2:
-          return SubscriptionEnum.Advanced;
-        case 3:
-          return SubscriptionEnum.Personalized;
-        default:
-          return SubscriptionEnum.Personalized;
-      }
-    }
-
-    subscriptionEnumToString(enumValue: SubscriptionEnum): string {
-      switch (enumValue) {
-        case SubscriptionEnum.Basic:
-          return 'Básico';
-        case SubscriptionEnum.Medium:
-          return 'Médio';
-        case SubscriptionEnum.Advanced:
-          return 'Avançado';
-        case SubscriptionEnum.Personalized:
-          return 'Personalizado';
-        default:
-          return 'Sem plano';
-      }
-    }
-
-    subscriptionStatusToString(status: SubscriptionStatus): string {
-      return SubscriptionStatus[status];
-    }
-
-    saveEditedSubscription(id: string) {
-      this.subscriptionRequest.description = this.subscriptionForm.get('description')?.value ?? '';
-      this.subscriptionRequest.price = this.subscriptionForm.get('price')?.value ?? 0;
-      this.subscriptionRequest.mercadoPagoPlanId = this.subscriptionForm.get('mercadoPagoPlanId')?.value ?? '';
-      this.subscriptionRequest.typeId = this.subscriptionForm.get('type')?.value ?? SubscriptionEnum.Basic;
-      this.subscriptionRequest.statusId = this.subscriptionForm.get('status')?.value ?? SubscriptionStatus.Inactive;
-      const subscriptionProperties: ISubscriptionProperties = {
-        support: this.subscriptionPropertiesForm.get('support')?.value ?? false,
-        phone: this.subscriptionPropertiesForm.get('phone')?.value ?? false,
-        email: this.subscriptionPropertiesForm.get('email')?.value ?? false,
-        messenger: this.subscriptionPropertiesForm.get('messenger')?.value ?? false,
-        chat: this.subscriptionPropertiesForm.get('chat')?.value ?? false,
-        liveSupport: this.subscriptionPropertiesForm.get('liveSupport')?.value ?? false,
-        documentation: this.subscriptionPropertiesForm.get('documentation')?.value ?? false,
-        onboarding: this.subscriptionPropertiesForm.get('onboarding')?.value ?? false,
-        training: this.subscriptionPropertiesForm.get('training')?.value ?? false,
-        updates: this.subscriptionPropertiesForm.get('updates')?.value ?? false,
-        backup: this.subscriptionPropertiesForm.get('backup')?.value ?? false,
-        customization: this.subscriptionPropertiesForm.get('customization')?.value ?? false,
-        analytics: this.subscriptionPropertiesForm.get('analytics')?.value ?? false,
-        integration: this.subscriptionPropertiesForm.get('integration')?.value ?? false,
-        apiAccess: this.subscriptionPropertiesForm.get('apiAccess')?.value ?? false,
-        cloudStorage: this.subscriptionPropertiesForm.get('cloudStorage')?.value ?? false,
-        multiUser: this.subscriptionPropertiesForm.get('multiUser')?.value ?? false,
-        prioritySupport: this.subscriptionPropertiesForm.get('prioritySupport')?.value ?? false,
-        sla: this.subscriptionPropertiesForm.get('sla')?.value ?? false,
-        serviceLevel: this.subscriptionPropertiesForm.get('serviceLevel')?.value ?? false,
-      };
-      this.subscriptionRequest.subscriptionProperties = subscriptionProperties;
-    
-      this.subscriptionService.updateSubscription(id, this.subscriptionRequest).subscribe({
-        next: () => {
-          this.selectedSubscription.subscriptionProperties = { ...subscriptionProperties };
-          this.getSubscriptions();
-          this._toastService.success('Plano atualizado com sucesso');
-        },
-        error: () => {
-          this._toastService.error('Erro ao atualizar plano');
-        }
-      });
-    }    
-
-    setSelectedCategory(category: string): void {
-      this.isTransitioning = true;
-      setTimeout(() => {
-        this.selectedCategory = category;
-        this.isTransitioning = false;
-      }, 300);
-    }
-
-    categories = [
-      { name: 'Suporte' },
-      { name: 'Documentação' },
-      { name: 'Funcionalidades' },
-      { name: 'Suporte Prioritário' },
-    ];
-
-    getPropertiesForCategory() {
-      return this.propertyCategoryMapping[this.selectedCategory] || [];
-    }
-
-    onSubscriptionPropertyChange(key: keyof ISubscriptionProperties, event: Event): void {
-      const input = event.target as HTMLInputElement;
-
-      if (this.selectedSubscription.subscriptionProperties) {
-        this.selectedSubscription.subscriptionProperties = {
+        this.subscriptionPropertiesForm.patchValue({
           ...this.selectedSubscription.subscriptionProperties,
-          [key]: input.checked,
-        };
+        });
+      },
+      error: () => {
+        this._toastService.error("Erro ao buscar plano");
       }
-    }
+    })
+  }
 
-    propertyCategoryMapping: PropertyCategoryMapping = {
-      'Suporte': [
-        { key: 'support', name: 'Suporte' },
-        { key: 'phone', name: 'Telefone' },
-        { key: 'email', name: 'E-mail' },
-        { key: 'messenger', name: 'Messenger' },
-        { key: 'chat', name: 'Chat' }
-      ],
-      'Documentação': [
-        { key: 'documentation', name: 'Documentação' },
-        { key: 'onboarding', name: 'Onboarding' },
-        { key: 'training', name: 'Treinamento' },
-        { key: 'updates', name: 'Atualizações' },
-      ],
-      'Funcionalidades': [
-        { key: 'backup', name: 'Backup' },
-        { key: 'customization', name: 'Customização' },
-        { key: 'analytics', name: 'Analytics' },
-        { key: 'integration', name: 'Integração' },
-        { key: 'apiAccess', name: 'Acesso à API' },
-        { key: 'cloudStorage', name: 'Armazenamento em Nuvem' },
-        { key: 'multiUser', name: 'Múltiplos Usuários' },
-      ],
-      'Suporte Prioritário': [
-        { key: 'prioritySupport', name: 'Suporte Prioritário' },
-        { key: 'sla', name: 'SLA' },
-        { key: 'serviceLevel', name: 'Nível de Serviço' }
-      ]
+  subscriptionTypes = [
+    SubscriptionEnum.Basic,
+    SubscriptionEnum.Medium,
+    SubscriptionEnum.Advanced,
+    SubscriptionEnum.Personalized
+  ];
+
+  subscriptionStatus = [
+    SubscriptionStatus.Active,
+    SubscriptionStatus.Inactive
+  ];
+
+  subscriptionNumberToEnum(number: number): SubscriptionEnum {
+    switch (number) {
+      case 0:
+        return SubscriptionEnum.Basic;
+      case 1:
+        return SubscriptionEnum.Medium;
+      case 2:
+        return SubscriptionEnum.Advanced;
+      case 3:
+        return SubscriptionEnum.Personalized;
+      default:
+        return SubscriptionEnum.Personalized;
+    }
+  }
+
+  subscriptionEnumToString(enumValue: SubscriptionEnum): string {
+    switch (enumValue) {
+      case SubscriptionEnum.Basic:
+        return 'Básico';
+      case SubscriptionEnum.Medium:
+        return 'Médio';
+      case SubscriptionEnum.Advanced:
+        return 'Avançado';
+      case SubscriptionEnum.Personalized:
+        return 'Personalizado';
+      default:
+        return 'Sem plano';
+    }
+  }
+
+  subscriptionStatusToString(status: SubscriptionStatus): string {
+    return SubscriptionStatus[status];
+  }
+
+  saveEditedSubscription(id: string) {
+    this.subscriptionRequest.description = this.subscriptionForm.get('description')?.value ?? '';
+    this.subscriptionRequest.price = this.subscriptionForm.get('price')?.value ?? 0;
+    this.subscriptionRequest.mercadoPagoPlanId = this.subscriptionForm.get('mercadoPagoPlanId')?.value ?? '';
+    this.subscriptionRequest.typeId = this.subscriptionForm.get('type')?.value ?? SubscriptionEnum.Basic;
+    this.subscriptionRequest.statusId = this.subscriptionForm.get('status')?.value ?? SubscriptionStatus.Inactive;
+    const subscriptionProperties: ISubscriptionProperties = {
+      support: this.subscriptionPropertiesForm.get('support')?.value ?? false,
+      phone: this.subscriptionPropertiesForm.get('phone')?.value ?? false,
+      email: this.subscriptionPropertiesForm.get('email')?.value ?? false,
+      messenger: this.subscriptionPropertiesForm.get('messenger')?.value ?? false,
+      chat: this.subscriptionPropertiesForm.get('chat')?.value ?? false,
+      liveSupport: this.subscriptionPropertiesForm.get('liveSupport')?.value ?? false,
+      documentation: this.subscriptionPropertiesForm.get('documentation')?.value ?? false,
+      onboarding: this.subscriptionPropertiesForm.get('onboarding')?.value ?? false,
+      training: this.subscriptionPropertiesForm.get('training')?.value ?? false,
+      updates: this.subscriptionPropertiesForm.get('updates')?.value ?? false,
+      backup: this.subscriptionPropertiesForm.get('backup')?.value ?? false,
+      customization: this.subscriptionPropertiesForm.get('customization')?.value ?? false,
+      analytics: this.subscriptionPropertiesForm.get('analytics')?.value ?? false,
+      integration: this.subscriptionPropertiesForm.get('integration')?.value ?? false,
+      apiAccess: this.subscriptionPropertiesForm.get('apiAccess')?.value ?? false,
+      cloudStorage: this.subscriptionPropertiesForm.get('cloudStorage')?.value ?? false,
+      multiUser: this.subscriptionPropertiesForm.get('multiUser')?.value ?? false,
+      prioritySupport: this.subscriptionPropertiesForm.get('prioritySupport')?.value ?? false,
+      sla: this.subscriptionPropertiesForm.get('sla')?.value ?? false,
+      serviceLevel: this.subscriptionPropertiesForm.get('serviceLevel')?.value ?? false,
     };
+    this.subscriptionRequest.subscriptionProperties = subscriptionProperties;
+
+    this.subscriptionService.updateSubscription(id, this.subscriptionRequest).subscribe({
+      next: () => {
+        this.selectedSubscription.subscriptionProperties = { ...subscriptionProperties };
+        this.getSubscriptions();
+        this._toastService.success('Plano atualizado com sucesso');
+      },
+      error: () => {
+        this._toastService.error('Erro ao atualizar plano');
+      }
+    });
+  }
+
+  setSelectedCategory(category: string): void {
+    this.isTransitioning = true;
+    setTimeout(() => {
+      this.selectedCategory = category;
+      this.isTransitioning = false;
+    }, 300);
+  }
+
+  categories = [
+    { name: 'Suporte' },
+    { name: 'Documentação' },
+    { name: 'Funcionalidades' },
+    { name: 'Suporte Prioritário' },
+  ];
+
+  getPropertiesForCategory() {
+    return this.propertyCategoryMapping[this.selectedCategory] || [];
+  }
+
+  onSubscriptionPropertyChange(key: keyof ISubscriptionProperties, event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (this.selectedSubscription.subscriptionProperties) {
+      this.selectedSubscription.subscriptionProperties = {
+        ...this.selectedSubscription.subscriptionProperties,
+        [key]: input.checked,
+      };
+    }
+  }
+
+  propertyCategoryMapping: PropertyCategoryMapping = {
+    'Suporte': [
+      { key: 'support', name: 'Suporte' },
+      { key: 'phone', name: 'Telefone' },
+      { key: 'email', name: 'E-mail' },
+      { key: 'messenger', name: 'Messenger' },
+      { key: 'chat', name: 'Chat' }
+    ],
+    'Documentação': [
+      { key: 'documentation', name: 'Documentação' },
+      { key: 'onboarding', name: 'Onboarding' },
+      { key: 'training', name: 'Treinamento' },
+      { key: 'updates', name: 'Atualizações' },
+    ],
+    'Funcionalidades': [
+      { key: 'backup', name: 'Backup' },
+      { key: 'customization', name: 'Customização' },
+      { key: 'analytics', name: 'Analytics' },
+      { key: 'integration', name: 'Integração' },
+      { key: 'apiAccess', name: 'Acesso à API' },
+      { key: 'cloudStorage', name: 'Armazenamento em Nuvem' },
+      { key: 'multiUser', name: 'Múltiplos Usuários' },
+    ],
+    'Suporte Prioritário': [
+      { key: 'prioritySupport', name: 'Suporte Prioritário' },
+      { key: 'sla', name: 'SLA' },
+      { key: 'serviceLevel', name: 'Nível de Serviço' }
+    ]
+  };
 }

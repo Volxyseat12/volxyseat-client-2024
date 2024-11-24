@@ -53,7 +53,6 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
       { name: 'Email', key: 'email' },
       { name: 'Messenger', key: 'messenger' },
       { name: 'Chat', key: 'chat' },
-      { name: 'Suporte ao vivo', key: 'liveSupport' },
     ],
     Documentação: [
       { name: 'Documentação', key: 'documentation' },

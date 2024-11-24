@@ -16,7 +16,7 @@ export class DashboardComponent {
   username: string | null = null;
   isAuthenticated: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private toastService: ToastService, private messageService: MessageService) {
+  constructor(public authService: AuthService, private router: Router, private toastService: ToastService, private messageService: MessageService) {
 
   }
 
