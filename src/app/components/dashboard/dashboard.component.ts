@@ -16,15 +16,15 @@ export class DashboardComponent {
   username: string | null = null;
   isAuthenticated: boolean = false;
 
-  constructor(private router: Router, private toastService: ToastService) {
+  constructor(private authService: AuthService, private router: Router, private toastService: ToastService, private messageService: MessageService) {
 
   }
 
   logout() {
-    localStorage.clear();
-    this.username = null;
-    this.isAuthenticated = false;
-    this.router.navigate(['/']);
-    this.toastService.success('Logout realizado com sucesso!');
+        localStorage.clear();
+        this.username = null;
+        this.isAuthenticated = false;
+        this.router.navigate(['/login']);
+        this.toastService.success('Logout realizado com sucesso!');
   }
 }

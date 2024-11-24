@@ -71,7 +71,8 @@ export class SubscriptionService {
     return this.http.get(`${this.apiUrl}/status/${id}`);
   }
 
-  updateSubscription(subscription: ISubscriptionRequest): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${subscription.id}`, subscription);
+  updateSubscription(id: string, subscription: ISubscriptionRequest): Observable<ISubscription>{
+    console.log(subscription)
+    return this.http.put<ISubscription>(`${this.apiUrl}/${id}`, subscription)
   }
 }

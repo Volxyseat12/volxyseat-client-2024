@@ -3,11 +3,10 @@ import { SubscriptionStatus } from "../Enums/SubscriptionStatus";
 import { ISubscriptionProperties } from "../ISubscriptionProperties";
 
 export interface ISubscriptionRequest {
-    id: string,
-    type: SubscriptionEnum;
-    status: SubscriptionStatus | null;
+    typeId: SubscriptionEnum;
+    statusId: SubscriptionStatus;
     description: string;
     price: number;
-    mercadoPagoPlanId: string;
     subscriptionProperties: ISubscriptionProperties;
-}
+    mercadoPagoPlanId: string;
+  }

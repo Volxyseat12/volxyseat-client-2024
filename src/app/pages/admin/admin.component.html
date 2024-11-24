@@ -26,7 +26,7 @@
                             <select
                                 class="block w-full px-4 py-2 pr-8 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 appearance-none cursor-pointer hover:border-gray-400 transition-colors duration-200"
                                 id="subscription-type" formControlName="type" name="subscription-type">
-                                <option *ngFor="let type of subscriptionTypes" [value]="type">
+                                <option *ngFor="let type of subscriptionTypes" [value]=type>
                                     {{ subscriptionEnumToString(type) }}
                                 </option>
                             </select>
@@ -65,12 +65,13 @@
                             <select
                                 class="block w-full px-4 py-2 pr-8 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 appearance-none cursor-pointer hover:border-gray-400 transition-colors duration-200"
                                 id="status" formControlName="status" name="status">
-                                <option [value]="SubscriptionStatus.Active">Ativo</option>
-                                <option [value]="SubscriptionStatus.Inactive">Inativo</option>
+                                <option [value]=SubscriptionStatus.Active>Ativo</option>
+                                <option [value]=SubscriptionStatus.Inactive>Inativo</option>
                             </select>
                         </div>
 
                         <!-- Propriedades -->
+                         <form [formGroup]="subscriptionPropertiesForm">
                         <div>
                             <div class="flex gap-8 items-center justify-center">
                                 <button *ngFor="let category of categories" (click)="setSelectedCategory(category.name)"
@@ -95,7 +96,7 @@
                                         <div class="col-span-1">{{ property.name }}</div>
                                         <div class="flex justify-center items-center">
                                             <div class="flex items-center justify-center">
-                                                <input type="checkbox"
+                                                <input type="checkbox" formControlName="{{ property.key }}"
                                                     [checked]="selectedSubscription.subscriptionProperties[property.key]"
                                                     class="w-6 h-6 rounded-full border-2 border-gray-300 checked:bg-orange-500 checked:border-orange-500 focus:ring-2 focus:ring-orange-300"
                                                     (change)="onSubscriptionPropertyChange(property.key, $event)">
@@ -106,11 +107,12 @@
                             </div>
 
                         </div>
+                      </form>
 
                         <!-- Botão Salvar -->
                         <button
                             class="bg-[#F97316] hover:bg-[#EA580C] w-full mt-4 text-white py-2 rounded-lg uppercase font-bold"
-                            (click)="saveEditedSubscription()" type="button">
+                            (click)="saveEditedSubscription(selectedSubscription.id)" type="button">
                             Salvar Assinatura
                         </button>
 
@@ -142,7 +144,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-700">R{{ subscription.price | currency }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700 gap-2 flex">
                                     <button class="p-2 uppercase bg-orange-500 text-white text-sm rounded-lg font-bold"
-                                        (click)="updatedForm(subscription.id)">Editar</button>
+                                        (click)="updateForm(subscription.id)">Editar</button>
                                 </td>
                             </tr>
                             }
