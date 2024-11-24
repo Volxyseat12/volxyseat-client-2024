@@ -109,9 +109,12 @@ export class AdminComponent implements OnInit {
 
     }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
       this.getSubscriptions();
-  }
+      if (this.selectedSubscription.id) {
+        this.updateForm(this.selectedSubscription.id);
+      }
+    }
 
   subscriptionForm = new FormGroup({
     description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
@@ -157,21 +160,25 @@ export class AdminComponent implements OnInit {
     });
     };
 
-    updateForm(id: string){
+    updateForm(id: string) {
       this.subscriptionService.getById(id).subscribe({
         next: (data: ISubscription) => {
           this.selectedSubscription = data;
           console.log(this.selectedSubscription);
           this.subscriptionForm.patchValue({
             ...this.selectedSubscription,
-          })
+          });
+    
+          this.subscriptionPropertiesForm.patchValue({
+            ...this.selectedSubscription.subscriptionProperties,
+          });
         },
         error: () => {
           this._toastService.error("Erro ao buscar plano");
         }
       })
     }
-
+    
     subscriptionTypes = [
       SubscriptionEnum.Basic,
       SubscriptionEnum.Medium,
@@ -218,7 +225,7 @@ export class AdminComponent implements OnInit {
       return SubscriptionStatus[status];
     }
 
-    saveEditedSubscription(id: string){
+    saveEditedSubscription(id: string) {
       this.subscriptionRequest.description = this.subscriptionForm.get('description')?.value ?? '';
       this.subscriptionRequest.price = this.subscriptionForm.get('price')?.value ?? 0;
       this.subscriptionRequest.mercadoPagoPlanId = this.subscriptionForm.get('mercadoPagoPlanId')?.value ?? '';
@@ -247,19 +254,18 @@ export class AdminComponent implements OnInit {
         serviceLevel: this.subscriptionPropertiesForm.get('serviceLevel')?.value ?? false,
       };
       this.subscriptionRequest.subscriptionProperties = subscriptionProperties;
-      
-      this.subscriptionService.updateSubscription(id, this.subscriptionRequest)
-        .subscribe({
-          next: () => {
-            this._toastService.success('Plano atualizado com sucesso!')
-            this.getSubscriptions();
-            console.log(this.subscriptionRequest);
-          },
-          error: () => {
-            this._toastService.error('Erro ao atualizar Plano!')
-          }
-        });
-    }
+    
+      this.subscriptionService.updateSubscription(id, this.subscriptionRequest).subscribe({
+        next: () => {
+          this.selectedSubscription.subscriptionProperties = { ...subscriptionProperties };
+          this.getSubscriptions();
+          this._toastService.success('Plano atualizado com sucesso');
+        },
+        error: () => {
+          this._toastService.error('Erro ao atualizar plano');
+        }
+      });
+    }    
 
     setSelectedCategory(category: string): void {
       this.isTransitioning = true;
