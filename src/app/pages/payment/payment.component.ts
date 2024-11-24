@@ -35,8 +35,6 @@ declare var MercadoPago: any;
     MatTableModule,
     HeaderComponent,
     FooterComponent,
-    SuccessComponent,
-    FailComponent,
   ],
   standalone: true,
   templateUrl: './payment.component.html',
@@ -69,7 +67,7 @@ export class PaymentComponent implements OnInit {
     private router: Router,
     private transactionService: TransactionService,
     private _toastService: ToastService
-  ) { this.createTransaction(); }
+  ) { }
 
   private cardForm: any;
   plan: ISubscription | undefined;
@@ -108,27 +106,7 @@ export class PaymentComponent implements OnInit {
     }
   }
 
-  createTransaction() {
-    const subId = localStorage.getItem('subId');
-    const clientId = localStorage.getItem('clientId');
-    const preApprovalId = localStorage.getItem('preApprovalId');
-    if (subId && clientId && preApprovalId) {
-      const transaction: ITransaction = {
-        clientId: clientId,
-        subscriptionId: subId,
-        mercadoPagoSubscriptionId: preApprovalId,
-      };
   
-      this.transactionService.post(transaction).subscribe({
-        next: (res: ICreateTransactionResponse) => {
-          localStorage.setItem('transactionId', res.transactionId);
-        },
-        error: (err) => {
-          this._toastService.error('Erro ao criar transação.');
-        },
-      });
-    }
-  }
 
   loadMercadoPagoScript(): void {
     if (typeof MercadoPago !== 'undefined') {
@@ -227,7 +205,7 @@ export class PaymentComponent implements OnInit {
         this.onFail();
         throw err;
       });
-  }
+  }  
 
   processPayment(event: Event): void {
     event.preventDefault();

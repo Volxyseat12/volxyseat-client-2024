@@ -12,6 +12,8 @@ import { ToastService } from 'angular-toastify';
 import { TransactionService } from '../../services/transaction.service';
 import { catchError, forkJoin, of } from 'rxjs';
 import { ITransactionResponse } from '../../models/SubscriptionModel/ITransactionResponse';
+import { CancelComponent } from '../../components/cancel/cancel.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -37,7 +39,8 @@ export class ProfileComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private mercadoPagoService: MercadoPagoService,
     private transactionService: TransactionService,
-    private _toastService: ToastService
+    private _toastService: ToastService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -167,5 +170,10 @@ export class ProfileComponent implements OnInit {
     } else {
       this._toastService.error('Nenhum plano adquirido.');
     }
+  }
+
+  cancelConfirm() {
+    this.dialog.open(CancelComponent, {
+    });
   }
 }

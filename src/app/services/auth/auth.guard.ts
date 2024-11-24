@@ -40,10 +40,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-    if (targetUrl == "/success" || targetUrl == "/fail") {
-      this.router.navigate(['/']);
-      return false;
-    }
+    // if (targetUrl == "/success" || targetUrl == "/fail") {
+    //   this.router.navigate(['/']);
+    //   return false;
+    // }
 
     // if (targetUrl == "/admin") {
     //   if (this.authService.getUserRoles().includes("admin")) {

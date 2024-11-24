@@ -10,6 +10,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ITransaction } from '../../models/SubscriptionModel/ITransaction';
 import { TransactionService } from '../../services/transaction.service';
+import { ICreateTransactionResponse } from '../../models/ICreateTransactionResponse';
+import { ToastService } from 'angular-toastify';
 
 @Component({
   selector: 'app-payment-success',
@@ -84,7 +86,30 @@ import { TransactionService } from '../../services/transaction.service';
   ],
 })
 export class SuccessComponent implements OnInit {
-  constructor() {
+  constructor(private transactionService: TransactionService, private _toastService: ToastService) {
+    this.createTransaction();
+  }
+
+  createTransaction() {
+    const subId = localStorage.getItem('subId');
+    const clientId = localStorage.getItem('clientId');
+    const preApprovalId = localStorage.getItem('preApprovalId');
+    if (subId && clientId && preApprovalId) {
+      const transaction: ITransaction = {
+        clientId: clientId,
+        subscriptionId: subId,
+        mercadoPagoSubscriptionId: preApprovalId,
+      };
+  
+      this.transactionService.post(transaction).subscribe({
+        next: (res: ICreateTransactionResponse) => {
+          localStorage.setItem('transactionId', res.transactionId);
+        },
+        error: (err) => {
+          this._toastService.error('Erro ao criar transação.');
+        },
+      });
+    }
   }
 
   isVisible = false;
